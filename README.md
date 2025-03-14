@@ -40,6 +40,16 @@ stow ~/dotfiles
 
 Dotfiles are now ready to use.
 
+## VIM
+
+I use the [Ultimate Vim Configuration](https://github.com/amix/vimrc)
+
+After setting this up (installed globally), it automatically places a `.vimrc` file into my profile. Then I copy my custom config into the `vim_runtime` directory.
+
+```shell
+sudo cp ~/dotfiles/my_configs.vim /opt/vim_runtime/
+```
+
 ## Contributing
 
 If you have any suggestions or find any bugs, please open an issue or pull request on GitHub.
