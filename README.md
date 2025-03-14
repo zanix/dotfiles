@@ -6,8 +6,16 @@ This repository contains my personal configuration files and scripts for optimiz
 
 Install Git, Stow, and Zsh on your system.
 
+Arch
+
 ```shell
 sudo pacman -Sy git stow zsh
+```
+
+Ubuntu/Debian
+
+```shell
+sudo apt install git stow zsh
 ```
 
 ## Installation
@@ -27,7 +35,7 @@ cd dotfiles
 Run `stow` to install the dotfiles.
 
 ```shell
-stow .
+stow ~/dotfiles
 ```
 
 Dotfiles are now ready to use.
