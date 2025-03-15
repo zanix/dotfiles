@@ -4,18 +4,19 @@ This repository contains my personal configuration files and scripts for optimiz
 
 ## Usage
 
-Install Git, Stow, and Zsh on your system.
+Install required depenencies on your system.
 
 Arch
 
 ```shell
-sudo pacman -Sy git stow zsh
+sudo pacman -Sy git stow zsh ifstat bat yq
+yay oh-my-posh-bin
 ```
 
 Ubuntu/Debian
 
 ```shell
-sudo apt install git stow zsh
+sudo apt install git stow zsh ifstat bat yq
 ```
 
 ## Installation
