@@ -111,9 +111,6 @@ alias fastping='ping -c 100 -i 0.2'  # Fast ping with 100 packets with 0.2 secon
 
 alias zshrc='${=EDITOR} ${ZDOTDIR:-$HOME}/.zshrc' # Quick access to the .zshrc file
 alias showhosts="sed -rn 's/^\s*Host\s+(.*)\s*/\1/ip' ~/.ssh/config"
-# alias flush-dns="sudo systemd-resolve --flush-caches"
-# alias flush-dns="sudo systemctl restart nscd"  # Older arch
-# alias flush-dns="resolvectl flush-caches"  # Ubuntu
 
 # Alias for neovim
 if [[ -x "$(command -v nvim)" ]]; then
@@ -138,6 +135,8 @@ fi
 # Link: https://github.com/sharkdp/bat
 if [[ -x "$(command -v bat)" ]]; then
   alias cat='bat'
+elif [[ -x "$(command -v batcat)" ]]; then  # batcat on Ubuntu
+  alias cat='batcat'
 fi
 
 # Get local IP addresses
@@ -157,6 +156,30 @@ fi
 #######################################################
 # Functions
 #######################################################
+
+# Flush DNS cache
+# sudo nmcli general reload dns-full   # Arch
+# resolvectl flush-caches              # Ubuntu
+# sudo systemd-resolve --flush-caches  # Older Ubuntu
+flush-dns() {
+  if [[ "$(uname -s)" == "Linux" ]]; then
+    if [[ -f /etc/os-release ]]; then
+      source /etc/os-release
+      if [[ "$ID" == "arch" || "$ID_LIKE" == "arch" ]]; then
+        nmcli general reload dns-full
+      elif [[ "$ID" == "ubuntu" || "$ID_LIKE" == "debian" ]]; then
+        resolvectl flush-caches
+      else
+        echo "Unsupported Linux distribution. Please manually flush DNS cache."
+      fi
+    else
+      echo "Unsupported OS. Please manually flush DNS cache."
+    fi
+  else
+    echo "This alias is only supported on Linux."
+  fi
+}
+
 
 # Copy file with a progress bar
 function cpp() {
