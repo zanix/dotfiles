@@ -2,6 +2,8 @@
 
 This repository contains my personal configuration files and scripts for optimizing my development environment. Includes settings for Bash, Vim, ZSH, Tmux, and more.
 
+![Terminal](terminal.png)
+
 ## Usage
 
 Install required depenencies on your system.
