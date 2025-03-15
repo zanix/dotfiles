@@ -1,8 +1,8 @@
 # dotfiles
 
-This repository contains my personal configuration files and scripts for optimizing my development environment. Includes settings for Bash, Vim, ZSH, Tmux, and more.
+This repository contains my personal configuration files and scripts for optimizing my development environment. Includes settings for Zsh, Tmux, Vim, and more.
 
-![Terminal](terminal.png)
+![Terminal Preview](terminal.png)
 
 ## Usage
 
@@ -47,20 +47,37 @@ cd dotfiles
 Run `stow` to install the dotfiles.
 
 ```shell
-stow ~/dotfiles
+stow .
 ```
 
 Dotfiles are now ready to use.
 
-## VIM
+## Software Info
+
+- [Zinit](https://github.com/zdharma-continuum/zinit) - Flexible and fast ZSH plugin manager.
+- [Oh My Posh](https://ohmyposh.dev) - A prompt theme engine for any shell.
+- [Nerd Fonts](https://www.nerdfonts.com) - Patched fonts with glyphs (icons).
+- [tmux-powerline](https://github.com/erikw/tmux-powerline) - Status bar consisting of dynamic & beautiful looking powerline segments, written purely in bash.
+- [bat](https://github.com/sharkdp/bat) - A cat(1) clone with wings.
+
+### VIM
 
 I use the [Ultimate Vim Configuration](https://github.com/amix/vimrc)
 
-After setting this up (installed globally), it automatically places a `.vimrc` file into my profile. Then I copy my custom config into the `vim_runtime` directory.
+> I use the [Install for multiple users](https://github.com/amix/vimrc#install-for-multiple-users) option
+
+After setting this up, it automatically places a `.vimrc` file into my profile. Then I copy my custom config into the `vim_runtime` directory.
 
 ```shell
 sudo cp ~/dotfiles/my_configs.vim /opt/vim_runtime/
 ```
+
+## Inspiration
+
+I used these dotfile repos as a start to create my own.
+
+- [dreamsofcode-io](https://github.com/dreamsofcode-io/dotfiles)
+- [codeopshq](https://github.com/codeopshq/dotfiles)
 
 ## Contributing
 
