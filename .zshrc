@@ -1,9 +1,3 @@
-# Automatically start a tmux session or reattach to an existing session on SSH login.
-if [ "$PS1" != "" -a -z "$TMUX" -a "${SSH_TTY:-x}" != x ]; then
-  WHOAMI=$(whoami)
-  ( (tmux has-session -t $WHOAMI && tmux attach-session -t $WHOAMI) || (tmux new-session -s $WHOAMI) ) && exit 0
-fi
-
 #######################################################
 # Zinit
 #######################################################
@@ -24,7 +18,16 @@ source "${ZINIT_HOME}/zinit.zsh"
 # Keybinds
 #######################################################
 
+# Add oh-my-zsh style key bindings.
 zinit ice depth=1; zinit load "NickKaramoff/ohmyzsh-key-bindings"
+
+#######################################################
+# Plugin Settings
+#######################################################
+
+# NO_AUTO_TMUX=1
+zstyle ":prezto:module:tmux:auto-start" local "no"
+zstyle ":prezto:module:tmux:auto-start" remote "yes"
 
 #######################################################
 # Plugins
@@ -34,6 +37,9 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light sunlei/zsh-ssh
+
+zinit ice pick'init.zsh'
+zinit light laggardkernel/zsh-tmux
 
 #######################################################
 # Snippets
@@ -77,13 +83,6 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 # zstyle ':completion:*' menu no
 
 #######################################################
-# Environment Variables
-#######################################################
-
-export EDITOR=vi
-export VISUAL=code
-
-#######################################################
 # Aliases
 #######################################################
 
@@ -105,9 +104,9 @@ alias rm='rm -i'         # Interactive remove with confirmation
 alias cp='cp -i'         # Interactive copy with confirmation
 alias mkdir='mkdir -pv'  # Always make parents and verbose
 
-alias genv='printenv | grep -i'    # Search for an environment variable
-alias now='date +"%T"'             # Current time
-alias nowd='date +"%m-%d-%Y"'      # Current date
+alias genv='printenv | grep -i'      # Search for an environment variable
+alias now='date +"%T"'               # Current time
+alias nowd='date +"%m-%d-%Y"'        # Current date
 alias fastping='ping -c 100 -i 0.2'  # Fast ping with 100 packets with 0.2 second intervals
 
 alias zshrc='${=EDITOR} ${ZDOTDIR:-$HOME}/.zshrc' # Quick access to the .zshrc file
@@ -121,9 +120,18 @@ if [[ -x "$(command -v nvim)" ]]; then
   alias vi='nvim'
   alias vim='nvim'
   alias svi='sudo nvim'
+  export EDITOR=nvim
+  export VISUAL=$EDITOR
 elif [[ -x "$(command -v vim)" ]]; then
   alias vi='vim'
   alias svi='sudo vim'
+  export EDITOR=nvim
+  export VISUAL=$EDITOR
+fi
+
+# Check for VSCode and set VISUAL
+if [[ -x "$(command -v code)" ]]; then
+  export VISUAL=code
 fi
 
 # Alias For bat
