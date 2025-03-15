@@ -118,12 +118,11 @@ fi
 if [ -z "$TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS" ]; then
 	TMUX_POWERLINE_RIGHT_STATUS_SEGMENTS=(
 		# "earthquake default_bg_color 3"
-		# "ifstat default_bg_color 30"
-		# "ifstat_sys default_bg_color 30"
 		"lan_ip default_bg_color 43"
 		# "vpn default_bg_color 43
 		"wan_ip default_bg_color 43 ${TMUX_POWERLINE_SEPARATOR_RIGHT_THIN}"
-		"ifstat default_bg_color 30 ${TMUX_POWERLINE_SEPARATOR_RIGHT_THIN}"
+		# "ifstat default_bg_color 30 ${TMUX_POWERLINE_SEPARATOR_RIGHT_THIN}"
+		# "ifstat_sys default_bg_color 30 ${TMUX_POWERLINE_SEPARATOR_RIGHT_THIN}"
 		# "macos_notification_count default_bg_color 29"
 		# "mailcount default_bg_color 9"
 		# "now_playing default_bg_color 37"
