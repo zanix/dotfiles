@@ -5,17 +5,12 @@
       "alignment": "left",
       "segments": [
         {
-          "background": "transparent",
-          "foreground": "#444444",
-          "style": "plain",
-          "template": "\u256d\u2500",
-          "type": "text"
-        },
-        {
-          "background": "transparent",
-          "foreground": "#d3d7cf",
-          "style": "plain",
-          "template": " {{ if .WSL }}WSL at {{ end }}{{.Icon}} ",
+          "foreground": "black",
+          "background": "#d3d7cf",
+          "style": "diamond",
+          "leading_diamond": "",
+          "trailing_diamond": "",
+          "template": "{{ if .WSL }}WSL at {{ end }}{{.Icon}}",
           "type": "os"
         },
         {
@@ -26,7 +21,7 @@
             "style": "full"
           },
           "style": "plain",
-          "template": "\uf07c {{ .Path }}",
+          "template": " \uf07c {{ .Path }}",
           "type": "path"
         },
         {
@@ -46,7 +41,7 @@
             "fetch_upstream_icon": true
           },
           "style": "plain",
-          "template": " {{ .UpstreamIcon }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} \ueb4b {{ .StashCount }}{{ end }} ",
+          "template": " {{ .UpstreamIcon }} {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} \ueb4b {{ .StashCount }}{{ end }} ",
           "type": "git"
         }
       ],
@@ -210,7 +205,7 @@
       "type": "rprompt"
     }
   ],
-  "console_title_template": "{{ .Shell }} in {{ .Folder }}",
+  "console_title_template": "{{ .UserName }}@{{ .HostName }} {{ .Shell }} in {{ .PWD }}",
   "transient_prompt": {
     "background": "transparent",
     "foreground": "green",
@@ -218,12 +213,12 @@
       "{{ if gt .Code 0 }}#cc2222{{ end }}",
       "{{ if eq .Code 0 }}green{{ end }}"
     ],
-    "template": "❯ "
+    "template": "\u276f "
   },
   "secondary_prompt": {
     "background": "transparent",
     "foreground": "#d3d7cf",
-    "template": "❯❯ "
+    "template": "\u276f\u276f "
   },
   "final_space": true,
   "version": 3
