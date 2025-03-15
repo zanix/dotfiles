@@ -1,3 +1,9 @@
+# Automatically start a tmux session or reattach to an existing session on SSH login.
+if [ "$PS1" != "" -a -z "$TMUX" -a "${SSH_TTY:-x}" != x ]; then
+  WHOAMI=$(whoami)
+  ( (tmux has-session -t $WHOAMI && tmux attach-session -t $WHOAMI) || (tmux new-session -s $WHOAMI) ) && exit 0
+fi
+
 #######################################################
 # Zinit
 #######################################################
