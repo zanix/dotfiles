@@ -10,6 +10,9 @@ Arch
 
 ```shell
 sudo pacman -Sy git stow zsh ifstat bat yq
+```
+
+```shell
 yay oh-my-posh-bin
 ```
 
@@ -18,6 +21,12 @@ Ubuntu/Debian
 ```shell
 sudo apt install git stow zsh ifstat bat yq
 ```
+
+```shell
+curl -s https://ohmyposh.dev/install.sh | sudo bash -s -- -d ~/usr/local/bin
+```
+
+> I have oh-my-posh installed globally
 
 ## Installation
 
