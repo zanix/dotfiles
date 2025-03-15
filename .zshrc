@@ -180,7 +180,6 @@ flush-dns() {
   fi
 }
 
-
 # Copy file with a progress bar
 function cpp() {
   if [[ -x "$(command -v rsync)" ]]; then

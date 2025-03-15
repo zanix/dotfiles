@@ -429,7 +429,12 @@
 # }
 
 # My Configuration {
-	export TMUX_POWERLINE_THEME="my-theme"
+	hostnames=("Erebus" "Cartago")
+	if [[ " ${hostnames[@]} " == *" $(hostname) "* ]]; then
+		export TMUX_POWERLINE_THEME="my-theme"
+	else
+		export TMUX_POWERLINE_THEME="server-theme"
+	fi
 	export TMUX_POWERLINE_SEG_MODE_INDICATOR_NORMAL_MODE_TEXT="󰒅"
 	export TMUX_POWERLINE_SEG_MODE_INDICATOR_PREFIX_MODE_TEXT="󰒇"
 	export TMUX_POWERLINE_SEG_MODE_INDICATOR_MOUSE_MODE_TEXT="󰍽"
