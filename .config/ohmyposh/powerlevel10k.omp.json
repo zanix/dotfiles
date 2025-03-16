@@ -10,8 +10,15 @@
           "style": "diamond",
           "leading_diamond": "",
           "trailing_diamond": "",
-          "template": "{{ if .WSL }}WSL at {{ end }}{{.Icon}}",
+          "template": "{{ if .WSL }}WSL at {{ end }}{{ .Icon }}",
           "type": "os"
+        },
+        {
+          "background": "transparent",
+          "foreground": "#cc2222",
+          "style": "plain",
+          "template": " \udb85\udc0b",
+          "type": "root"
         },
         {
           "background": "transparent",
@@ -136,13 +143,6 @@
           "style": "plain",
           "template": " {{ .Profile }}{{ if .Region }}@{{ .Region }}{{ end }} \ue7ad ",
           "type": "aws"
-        },
-        {
-          "background": "transparent",
-          "foreground": "#ffff66",
-          "style": "plain",
-          "template": " \uf0ad ",
-          "type": "root"
         },
         {
           "background": "transparent",
