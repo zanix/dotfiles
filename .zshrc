@@ -1,3 +1,19 @@
+# Start a tmux session or reattach to an existing session
+if [ "$PS1" != "" -a -z "$TMUX" -a "${SSH_TTY:-x}" != x ]; then
+  WHOAMI=$(whoami)
+  ( (tmux has-session -t $WHOAMI && tmux attach-session -t $WHOAMI) || (tmux new-session -s $WHOAMI) ) && exit 0
+fi
+
+# Display Fastfetch only once
+if [ -x "$(command -v fastfetch)" -a  -z "$_motd_listed" ]; then
+  case "$TMUX_PANE" in
+    %0) fastfetch
+        export _motd_listed=yes
+        ;;
+    *)  ;;
+  esac
+fi
+
 #######################################################
 # Zinit
 #######################################################
@@ -25,10 +41,6 @@ zinit ice depth=1; zinit load "NickKaramoff/ohmyzsh-key-bindings"
 # Plugin Settings
 #######################################################
 
-# NO_AUTO_TMUX=1
-zstyle ":prezto:module:tmux:auto-start" local "no"
-zstyle ":prezto:module:tmux:auto-start" remote "yes"
-
 #######################################################
 # Plugins
 #######################################################
@@ -37,9 +49,6 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light sunlei/zsh-ssh
-
-zinit ice pick'init.zsh'
-zinit light laggardkernel/zsh-tmux
 
 #######################################################
 # Snippets
@@ -111,6 +120,7 @@ alias fastping='ping -c 100 -i 0.2'  # Fast ping with 100 packets with 0.2 secon
 
 alias zshrc='${=EDITOR} ${ZDOTDIR:-$HOME}/.zshrc' # Quick access to the .zshrc file
 alias showhosts="sed -rn 's/^\s*Host\s+(.*)\s*/\1/ip' ~/.ssh/config"
+alias df="df -Th | grep -Ev '(udev|tmpfs)'"
 
 # Alias for neovim
 if [[ -x "$(command -v nvim)" ]]; then
