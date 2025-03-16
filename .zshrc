@@ -57,8 +57,6 @@ zinit light sunlei/zsh-ssh
 zinit snippet OMZL::git.zsh
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
-zinit snippet OMZP::history
-zinit snippet OMZP::compleat
 zinit snippet OMZP::command-not-found
 zinit snippet OMZP::nvm
 
