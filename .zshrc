@@ -354,6 +354,8 @@ auto-switch-node-version() {
 }
 
 # Run auto-switch-node-version whenever you change directory
-autoload -U add-zsh-hook
-add-zsh-hook chpwd auto-switch-node-version
-auto-switch-node-version
+if [[ -x "$(command -v nvm)" ]]; then
+  autoload -U add-zsh-hook
+  add-zsh-hook chpwd auto-switch-node-version
+  auto-switch-node-version
+fi
