@@ -23,7 +23,8 @@
         {
             "type": "command",
             "key": " ",
-            "text": "echo \"\\033[31;1m$(whoami)\\033[97m@\\033[31m$(hostname -f)\""
+            "text": "echo $(hostname -f)",
+            "format": "{#red}{1}"
         },
         {
             "type": "custom",
@@ -126,7 +127,8 @@
             "type": "command",
             "key": "󰅐 OS Age",
             "keyColor": "magenta",
-            "text": "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days"
+            "text": "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days",
+            "format": "{1}"
         },
         {
             "type": "uptime",
