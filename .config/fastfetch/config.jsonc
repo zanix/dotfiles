@@ -24,7 +24,7 @@
             "type": "command",
             "key": " ",
             "text": "echo $(hostname -f)",
-            "format": "{#red}{1}"
+            "format": "{#bright_red}{1}"
         },
         {
             "type": "custom",
