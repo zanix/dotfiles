@@ -114,8 +114,7 @@
         },
         {
             "type": "localip",
-            "key": "󰩟 IP ({ifname})",
-            "format": "",
+            "key": "󰩟 IP",
             "keyColor": "cyan"
         },
         {
