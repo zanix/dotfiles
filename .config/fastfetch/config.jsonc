@@ -21,9 +21,9 @@
             "outputColor": "90"
         },
         {
-            "type": "title",
-            "fqdn": true,
-            "keyWidth": 10
+            "type": "command",
+            "key": " ",
+            "text": "echo \"\\033[31;1m$(whoami)\\033[97m@\\033[31m$(hostname -f)\""
         },
         {
             "type": "custom",
