@@ -444,4 +444,5 @@
 	export TMUX_POWERLINE_SEG_TIME_FORMAT="󰅐 %-I:%M %p"
 	export TMUX_POWERLINE_SEG_TMUX_SESSION_INFO_FORMAT=" #I.#P"
 	export TMUX_POWERLINE_SEG_WEATHER_UNIT="f"
+	export TMUX_POWERLINE_SEG_IFSTAT_INTERFACE_EXCLUDES="^u?tun[0-9]+$ ^docker[0-9]$ ^br-[a-zA-Z0-9]+$ ^veth[a-zA-Z0-9]+$ ^docker_gwbridge$"
 # }

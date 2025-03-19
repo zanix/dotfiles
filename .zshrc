@@ -130,7 +130,7 @@ if [[ -x "$(command -v nvim)" ]]; then
 elif [[ -x "$(command -v vim)" ]]; then
   alias vi='vim'
   alias svi='sudo vim'
-  export EDITOR=nvim
+  export EDITOR=vim
   export VISUAL=$EDITOR
 fi
 
