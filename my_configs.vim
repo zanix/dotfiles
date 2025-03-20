@@ -1,5 +1,6 @@
+" Local configuration for the Ultimate Vim Configuration (https://github.com/amix/vimrc)
+
 " Hide the default mode text (e.g. -- INSERT -- below the statusline)
-set noshowmode
 
 " Show line numbers
 set number
