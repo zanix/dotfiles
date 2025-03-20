@@ -117,22 +117,6 @@ stow .
 
 Dotfiles are now ready to use.
 
-### Multiple users
-
-```shell
-git clone https://github.com/zanix/dotfiles.git /opt/dotfiles
-```
-
-```shell
-cd /opt/dotfiles
-```
-
-Run `stow` with the target option to install the dotfiles.
-
-```shell
-stow -t /home/user .
-```
-
 ## Inspiration
 
 I used these dotfile repos as a start to create my own.
