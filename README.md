@@ -27,8 +27,9 @@ This repository contains my personal configuration files and scripts for optimiz
 - a **C** compiler for `nvim-treesitter`. See [here](https://github.com/nvim-treesitter/nvim-treesitter#requirements)
 - for [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) **_(optional)_**
   - **find files**: [fd](https://github.com/sharkdp/fd)
-- a terminal that supports true color and _undercurl_:
+- a terminal that supports true color and _undercurl_: (I use ghostty)
   - [ghostty](https://github.com/ghostty-org/ghostty) **_(Linux & Macos)_**
+    - [config tool](https://ghostty.zerebos.com)
   - [kitty](https://github.com/kovidgoyal/kitty) **_(Linux & Macos)_**
   - [wezterm](https://github.com/wez/wezterm) **_(Linux, Macos & Windows)_**
   - [alacritty](https://github.com/alacritty/alacritty) **_(Linux, Macos & Windows)_**
@@ -62,13 +63,13 @@ Install depenencies on your system.
 ### Arch
 
 ```shell
-sudo pacman -Sy fd git ifstat neovim stow yq zsh
+sudo pacman -Sy fd git neovim stow yq zsh
 ```
 
-Install `oh-my-posh` from the AUR
+Install `ifstat` and `oh-my-posh` from the AUR
 
 ```shell
-yay oh-my-posh-bin
+yay ifstat oh-my-posh-bin
 ```
 
 Optional packages:

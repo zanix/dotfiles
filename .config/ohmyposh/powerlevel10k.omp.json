@@ -28,7 +28,7 @@
             "style": "full"
           },
           "style": "plain",
-          "template": " \uf07c {{ .Path }}",
+          "template": " \uf07c  {{ .Path }}",
           "type": "path"
         },
         {

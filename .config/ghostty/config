@@ -1,0 +1,8 @@
+theme = tokyonight_night
+
+background-opacity = 0.95
+background-blur-radius = 20
+window-height = 55
+window-width = 200
+
+font-size = 11
