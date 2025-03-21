@@ -49,6 +49,30 @@ export NVM_LAZY_LOAD=true
 export NVM_COMPLETION=true
 export NVM_AUTO_USE=true
 
+# fzf configuration
+if [[ -x "$(command -v fzf)" ]]; then
+	export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+	  --info=inline-right \
+	  --ansi \
+	  --layout=reverse \
+	  --border=rounded \
+	  --color=border:#27a1b9 \
+	  --color=fg:#c0caf5 \
+	  --color=gutter:#16161e \
+	  --color=header:#ff9e64 \
+	  --color=hl+:#2ac3de \
+	  --color=hl:#2ac3de \
+	  --color=info:#545c7e \
+	  --color=marker:#ff007c \
+	  --color=pointer:#ff007c \
+	  --color=prompt:#2ac3de \
+	  --color=query:#c0caf5:regular \
+	  --color=scrollbar:#27a1b9 \
+	  --color=separator:#ff9e64 \
+	  --color=spinner:#ff007c \
+	"
+fi
+
 #######################################################
 # Plugins
 #######################################################
@@ -61,6 +85,7 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-completions
 zinit light sunlei/zsh-ssh
+zinit light Aloxaf/fzf-tab
 
 #######################################################
 # Snippets
@@ -92,7 +117,11 @@ source $omp_cache
 # zstyle ':completion:*' cache-path $cache_dir/zsh/.zcompcache
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' menu select
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+zstyle ':completion:*:*:docker:*' option-stacking yes
+zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
 #######################################################
 # History
@@ -165,7 +194,14 @@ fi
 if [[ -x "$(command -v bat)" ]]; then
   alias cat='bat'
 elif [[ -x "$(command -v batcat)" ]]; then  # batcat on Ubuntu
+  alias bat='batcat'
   alias cat='batcat'
+fi
+
+# Alias for FZF
+# Link: https://github.com/junegunn/fzf
+if [[ -x "$(command -v fzf)" ]]; then
+  alias fzf='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"'
 fi
 
 # Get local IP addresses
@@ -305,3 +341,10 @@ function pathprepend() {
 # Add the most common personal binary paths located inside the home folder
 # (these directories are only added if they exist)
 pathprepend "$HOME/bin" "$HOME/sbin" "$HOME/.local/bin" "$HOME/local/bin" "$HOME/.bin"
+
+#######################################################
+# Shell integrations
+#######################################################
+
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)

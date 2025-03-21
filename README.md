@@ -12,6 +12,7 @@ This repository contains my personal configuration files and scripts for optimiz
 - [Zinit](https://github.com/zdharma-continuum/zinit) - Flexible and fast ZSH plugin manager
 - [Oh My Posh](https://ohmyposh.dev) - A prompt theme engine for any shell
 - [Nerd Fonts](https://www.nerdfonts.com) - Patched fonts with glyphs (icons)
+- [fzf](https://github.com/junegunn/fzf) - Interactive filtering
 
 ### Tmux
 
@@ -63,7 +64,7 @@ Install depenencies on your system.
 ### Arch
 
 ```shell
-sudo pacman -Sy fd git neovim stow yq zsh
+sudo pacman -Sy fd fzf git neovim stow yq zsh
 ```
 
 Install `ifstat` and `oh-my-posh` from the AUR
@@ -81,7 +82,7 @@ sudo pacman -Sy bat btop fastfetch
 ### Ubuntu/Debian
 
 ```shell
-sudo apt install fd-find git ifstat neovim stow yq zsh
+sudo apt install fd-find fzf git ifstat neovim python3-venv stow yq zsh
 ```
 
 Install `oh-my-posh` globally using the offical install script
