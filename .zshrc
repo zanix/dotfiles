@@ -1,7 +1,6 @@
 # Start a tmux session or reattach to an existing session
-if [ "$PS1" != "" -a -z "$TMUX" -a "${SSH_TTY:-x}" != x ]; then
-  WHOAMI=$(whoami)
-  ( (tmux has-session -t $WHOAMI && tmux attach-session -t $WHOAMI) || (tmux new-session -s $WHOAMI) ) && exit 0
+if [[ -n "$PS1" && -z "$TMUX" && -n "$SSH_TTY" ]]; then
+  (tmux has-session -t $USER && tmux attach-session -t $USER) || tmux new-session -s $USER && exit 0
 fi
 
 # Display Fastfetch only once
@@ -21,7 +20,7 @@ fi
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
-# Download Zinit, if it's not there yet
+# Download Zinit, if it's not installed yet
 if [ ! -d "$ZINIT_HOME" ]; then
   mkdir -p "$(dirname $ZINIT_HOME)"
   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
@@ -38,16 +37,29 @@ source "${ZINIT_HOME}/zinit.zsh"
 zinit ice depth=1; zinit load "NickKaramoff/ohmyzsh-key-bindings"
 
 #######################################################
-# Plugin Settings
+# Environemt Variables
 #######################################################
+
+# Set directories
+local -r cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}
+local -r config_dir=${XDG_CONFIG_HOME:-$HOME/.config}
+
+# Lazy load NVM
+export NVM_LAZY_LOAD=true
+export NVM_COMPLETION=true
+export NVM_AUTO_USE=true
 
 #######################################################
 # Plugins
 #######################################################
 
+# Load completions before plugins to avoid reinitializing
+autoload -Uz compinit && compinit
+
+zinit light lukechilds/zsh-nvm
 zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-completions
 zinit light sunlei/zsh-ssh
 
 #######################################################
@@ -58,15 +70,29 @@ zinit snippet OMZL::git.zsh
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
 zinit snippet OMZP::command-not-found
-zinit snippet OMZP::nvm
-
-# Load completions
-autoload -Uz compinit && compinit
 
 zinit cdreplay -q
 
-# Initialize oh-my-posh
-eval "$(oh-my-posh init zsh --config ~/.config/ohmyposh/powerlevel10k.omp.json)"
+# Cache oh-my-posh init to avoid recomputation
+omp_cache=$cache_dir/oh-my-posh-init.zsh
+omp_config=$config_dir/ohmyposh/powerlevel10k.omp.json
+if [[ ! -f $omp_cache || ! -f $omp_config || $omp_config -nt $omp_cache ||
+      $(which oh-my-posh) -nt $omp_cache ]]; then
+  mkdir -p ~/.cache
+  oh-my-posh init zsh --config $omp_config > $omp_cache
+fi
+source $omp_cache
+
+#######################################################
+# Plugin Configuration
+#######################################################
+
+# Completion styling
+# zstyle ':completion:*' use-cache true
+# zstyle ':completion:*' cache-path $cache_dir/zsh/.zcompcache
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu select
 
 #######################################################
 # History
@@ -83,11 +109,6 @@ setopt hist_ignore_all_dups
 setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
-
-# Completion styling
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' menu select
 
 #######################################################
 # Aliases
@@ -284,78 +305,3 @@ function pathprepend() {
 # Add the most common personal binary paths located inside the home folder
 # (these directories are only added if they exist)
 pathprepend "$HOME/bin" "$HOME/sbin" "$HOME/.local/bin" "$HOME/local/bin" "$HOME/.bin"
-
-#######################################################
-# NVM
-#######################################################
-
-# nvm-auto-switch
-# Uses .nvmrc to automatically switch the node version
-auto-switch-node-version() {
-  NVMRC_PATH=$(nvm_find_nvmrc)
-  CURRENT_NODE_VERSION=$(nvm version)
-
-  if [[ ! -z "$NVMRC_PATH" ]]; then
-    # .nvmrc file found!
-
-    # Read the file
-    REQUESTED_NODE_VERSION=$(cat $NVMRC_PATH)
-
-    # Find an installed Node version that satisfies the .nvmrc
-    MATCHED_NODE_VERSION=$(nvm_match_version $REQUESTED_NODE_VERSION)
-
-    if [[ ! -z "$MATCHED_NODE_VERSION" && $MATCHED_NODE_VERSION != "N/A" ]]; then
-      # A suitable version is already installed.
-
-      # Clear any warning suppression
-      unset AUTOSWITCH_NODE_SUPPRESS_WARNING
-
-      # Switch to the matched version ONLY if necessary
-      if [[ $CURRENT_NODE_VERSION != $MATCHED_NODE_VERSION ]]; then
-        nvm use $REQUESTED_NODE_VERSION
-      fi
-    else
-      # No installed Node version satisfies the .nvmrc.
-
-      # Quit silently if we already just warned about this exact .nvmrc file, so you
-      # only get spammed once while navigating around within a single project.
-      if [[ $AUTOSWITCH_NODE_SUPPRESS_WARNING == $NVMRC_PATH ]]; then
-        return
-      fi
-
-      # Convert the .nvmrc path to a relative one (if possible) for readability
-      RELATIVE_NVMRC_PATH="$(realpath --relative-to=$(pwd) $NVMRC_PATH 2> /dev/null || echo $NVMRC_PATH)"
-
-      # Print a clear warning message
-      echo ""
-      echo "WARNING"
-      echo "  Found file: $RELATIVE_NVMRC_PATH"
-      echo "  specifying: $REQUESTED_NODE_VERSION"
-      echo "  ...but no installed Node version satisfies this."
-      echo "  "
-      echo "  Current node version: $CURRENT_NODE_VERSION"
-      echo "  "
-      echo "  You might want to run \"nvm install\""
-
-      # Record that we already warned about this unsatisfiable .nvmrc file
-      export AUTOSWITCH_NODE_SUPPRESS_WARNING=$NVMRC_PATH
-    fi
-  else
-    # No .nvmrc file found.
-
-    # Clear any warning suppression
-    unset AUTOSWITCH_NODE_SUPPRESS_WARNING
-
-    # Revert to default version, unless that's already the current version.
-    if [[ $CURRENT_NODE_VERSION != $(nvm version default)  ]]; then
-      nvm use default
-    fi
-  fi
-}
-
-# Run auto-switch-node-version whenever you change directory
-if [[ -x "$(command -v nvm)" ]]; then
-  autoload -U add-zsh-hook
-  add-zsh-hook chpwd auto-switch-node-version
-  auto-switch-node-version
-fi
