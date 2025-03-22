@@ -1,0 +1,648 @@
+#######################################################
+# Set the default editor
+# Examples: vim, nvim, emacs, nano, micro, helix, pico,
+# or gui apps like kate, gedit, notepadqq, or vscodium
+# NOTE: In Git Bash, you can use something like "/c/Program\ Files/Notepad++/notepad++.exe"
+#######################################################
+
+# We will default to use either Neovim https://neovim.io or vim instead of vi
+# NOTE: vi is POSIX compliant but vim has more features and Neovim is more extensible
+# http://www.viemu.com/a-why-vi-vim.html
+# https://www.linuxfordevices.com/tutorials/linux/vim-vs-neovim
+# Then nano as a last resort
+if [[ -x "$(command -v nvim)" ]]; then
+	alias vi='nvim'
+	alias vim='nvim'
+	alias svi='sudo nvim'
+  export EDITOR=nvim
+elif [[ -x "$(command -v vim)" ]]; then
+	alias vi='vim'
+	alias svi='sudo vim'
+  export EDITOR=vim
+elif [[ -x "$(command -v nano)" ]]; then
+  export EDITOR=nano
+fi
+
+# Check for VSCode and set VISUAL
+if [[ -x "$(command -v code)" ]]; then
+  export VISUAL=code
+else
+  export VISUAL=$EDITOR
+fi
+
+#######################################################
+# Add Common Binary Directories to Path
+#######################################################
+
+# Add directories to the end of the path if they exist and are not already in the path
+# Link: https://superuser.com/questions/39751/add-directory-to-path-if-its-not-already-there
+function pathappend() {
+  for ARG in "$@"
+  do
+    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+      PATH="${PATH:+"$PATH:"}$ARG"
+    fi
+  done
+}
+
+# Add directories to the beginning of the path if they exist and are not already in the path
+function pathprepend() {
+  for ARG in "$@"
+  do
+    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+      PATH="$ARG${PATH:+":$PATH"}"
+    fi
+  done
+}
+
+# Add the most common personal binary paths located inside the home folder
+# (these directories are only added if they exist)
+pathprepend "$HOME/bin" "$HOME/sbin" "$HOME/.local/bin" "$HOME/local/bin" "$HOME/.bin"
+
+#######################################################
+# Alias to run the default editor
+#######################################################
+
+# Edit any file using the default editor for the user
+# and auto-detect if root permissions are needed
+function edit() {
+	# If we have no parameters
+	if [[ $# -eq 0 ]]; then
+		# Load the default editor without any file
+		"${EDITOR}"
+	# If the file exists, and we have read/write access...
+	elif [[ -r "${1}" ]] && [[ -w "${1}" ]]; then
+		# Load in the default editor
+		"${EDITOR}" "${1}"
+	elif [[ -f "${1}" ]]; then # The file does exist...
+		# Edit the file using sudo but use this users default editor
+		echo -e "\033[1;31mInsufficient permissions:\033[1;33m Using super user to edit \033[1;36m${1}\033[0m"
+		# sudoedit "${1}" 2>/dev/null || sudo --preserve-env "${EDITOR}" "${1}"
+		sudo --preserve-env "${EDITOR}" "${1}"
+	else # File does not exist...
+		# Create a new file...
+		if touch "${1}" ; then
+			# If success, edit it
+			"${EDITOR}" "${1}"
+			# If there was no edit (file is empty), delete it
+			[[ -s "${1}" ]] || \rm -f "${1}" 2>/dev/null
+		else # Cannot create new file...
+			# Create the file using sudo using this user's default editor
+			echo -e "\033[1;31mInsufficient permissions:\033[1;33m Using super user to create \033[1;36m${1}\033[0m"
+			sudo --preserve-env "${EDITOR}" "${1}"
+		fi
+	fi
+}
+
+# Shortcut for edit using only the letter e
+alias e="edit"
+
+# Edit the .zshrc file
+alias zshrc='${=EDITOR} ${ZDOTDIR:-$HOME}/.zshrc'
+
+#######################################################
+# Systemd Services
+#######################################################
+
+if [[ -x "$(command -v systemctl)" ]]; then
+	# Get a list of all services
+	alias services='systemctl list-units --type=service --state=running,failed'
+	alias servicesall='systemctl list-units --type=service'
+
+	# Find what systemd services have failed
+	alias failed='systemctl --failed'
+
+	# Get the status of a services
+	alias servicestatus='sudo systemctl status'
+
+	# Start or stop services
+	alias servicestart='sudo systemctl start'
+	alias servicestop='sudo systemctl stop'
+	alias servicekill='sudo systemctl kill'
+	alias servicerestart='sudo systemctl restart' # Stop and start
+	alias servicereload='sudo systemctl reload'   # Reload configuration
+
+	# Clear system log entries from the systemd journal
+	alias clearsystemlogs='echo -ne "\033[1;34mBefore\033[0m: "; journalctl --disk-usage; sudo journalctl --rotate; sudo journalctl --vacuum-time=1s; echo -ne "\033[1;34mAfter\033[0m: "; journalctl --disk-usage'
+fi
+
+#######################################################
+# Changing and Listing Directories
+#######################################################
+
+# Aliases for multiple directory listing commands
+alias ls='ls -Fh --color=always --group-directories-first'     # do add built-in colors to file types
+alias ll='ls -Fls'                    # long listing
+alias labc='ls -lAp'                  # sort alphabetically
+alias lx='ll -lAXBh'                  # sort by extension
+alias lk='ll -lASrh'                  # sort by size
+alias lt='ll -lAtrh'                  # sort by date
+alias lc='ll -lAcrh'                  # sort by change time
+alias lu='ll -lAurh'                  # sort by access time
+alias new='ls -lAtr | tail -10 | tac' # list recently created/updated files
+alias lw='ls -xAh'                    # wide listing format
+alias lm='ll -Alh | \less -S'         # pipe through less
+alias lr='ls -lRh'                    # recursive ls
+alias l.='ll -d .*'                   # show hidden files
+alias lfile="ls -l | egrep -v '^d'"   # files only
+alias ldir="ls -lA | egrep '^d'"      # directories only
+alias la='ls -lA'                     # long list, almost all, type, human readable
+
+# List all files larger than a given size
+# llfs +10k will find and display all files larger than 10 kilobytes in the currect directory
+alias llfs='_f(){ find . -type f -size "$1" -exec ls --color --classify --human-readable -l {} \; ; }; _f'
+
+# Allow changing directory when missing a space
+alias cd..='\cd ..'
+
+# Allow changing directory back when missing a space
+alias cd-='cd -'
+
+# Go back directories dot style
+alias ..='\cd ..'
+alias ...='\cd ../..'
+alias ....='\cd ../../..'
+alias .....='\cd ../../../..'
+
+# Go back directories dot dot number style
+alias ..2='..; ..'
+alias ..3='..2; ..'
+alias ..4='..3; ..'
+alias ..5='..4; ..'
+
+#######################################################
+# Find Files or File Information
+#######################################################
+
+# Searches for filenames (can use wildcards)
+if [[ -x "$(command -v fdfind)" ]]; then
+	# Use fdfind if installed
+	# Link: https://github.com/sharkdp/fd
+	alias f='fdfind'
+elif [[ -x "$(command -v fd)" ]]; then
+	# Use the shorter fd command
+	alias f='fd'
+else
+	alias f='find . -type f -iname'
+fi
+
+# Searches for directories (can use wildcards)
+# Example: finddir config
+# Example: finddir "This has spaces"
+alias finddir='find . -type d -iname'
+
+# Show all logs in /var/log
+alias logs="find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
+
+# If the mlocate package is installed
+if [[ -x "$(command -v locate)" ]]; then
+	# Case insensitive search and display only files present in your system
+	alias locate='locate -i -e'
+
+	# Update the locate database before locating a file
+	alias ulocate='sudo updatedb && locate'
+
+	# Always update the locate (mlocate) database as root
+	alias updatedb='sudo updatedb'
+
+	# Display the number of matching entries
+	alias locount='locate -c'
+fi
+
+#######################################################
+# File Management
+#######################################################
+
+# When copying files, prompt before overwriting a file
+alias cp='cp -i'
+
+# When moving files, prompt for confirmation if the destination path exists
+# Use -f if you want to skip all prompts (-i option is ignored)
+alias mv='mv -i'
+
+# Prompt whether to remove destinations
+alias ln='ln -i'
+
+# Prompt before every removal
+alias rm='rm -i --preserve-root'
+
+# Remove a directory and all files
+alias rmd='\rm --recursive --force --verbose'
+
+# When shredding files, shred no matter permissions and remove the file(s)
+alias shred='shred --force --remove --verbose'
+
+# Make parent directories as needed
+alias mkdir='mkdir -pv'
+
+# Safety net for changing permisions on /
+alias chown='chown --preserve-root'
+alias chmod='chmod --preserve-root'
+alias chgrp='chgrp --preserve-root'
+
+# Make mount command output pretty and human readable format
+alias mount='mount | column -t'
+
+# Display disk space available and show file system type
+alias df="df -Th | grep -Ev '(squashfs)'"
+alias ds="df -Th | grep -Ev '(squashfs|udev|tmpfs)'"
+
+# List block devices but show more info including the files systems and permissions
+# and removes all snap packages from the list
+alias lsb='lsblk --fs --perms --output NAME,LABEL,TYPE,MOUNTPOINTS,FSTYPE,SIZE,FSUSE%,MAJ:MIN,RM,RO,UUID | grep -v \/snap'
+
+# Alias to fuzzy find files in the current folder(s), preview them, and launch in an editor
+# Link: https://github.com/junegunn/fzf
+if [[ -x "$(command -v fzf)" && -x "$(command -v bat)" ]]; then
+  alias fzf='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"'
+fi
+
+#######################################################
+# Date and Time
+#######################################################
+
+# Show the time
+alias now='date +"%T"'
+
+# Show the short date
+alias today='date +"%Y-%m-%d"'
+
+# Stop watch
+alias stopwatch='date && echo "Press CTRL-D to stop" && time read'
+
+#######################################################
+### CPU, Memory, and Processes
+#######################################################
+
+# Display amount of free and used memory
+alias free='free -h'
+
+# When reporting a snapshot of the current processes:
+# a = all users
+# u = user-oriented format providing detailed information
+# x = list the processes without a controlling terminal
+# f = display a tree view of parent to child processes
+alias ps='ps auxf'
+
+# Show top ten processes
+alias cpu='ps aux | sort -r -nk +4 | head | $PAGER'
+
+# Show CPU information
+alias cpuinfo='lscpu | $PAGER'
+
+# Show the USB device tree
+if [[ -x "$(command -v lsusb)" ]]; then
+	alias usb='lsusb -t'
+fi
+
+# Show the PCI device tree
+if [[ -x "$(command -v lspci)" ]]; then
+	alias pci='lspci -tv'
+fi
+
+#######################################################
+## Networking
+#######################################################
+
+# Resume wget by default
+if [[ -x "$(command -v wget)" ]]; then
+	alias wget='wget -c'
+fi
+
+# Stop pinging after sending 5 ECHO_REQUEST packets
+alias ping='ping -c 5'
+
+# Do not wait for ping interval 1 second, go fast
+alias fastping='ping -c 100 -i.2'
+
+# Show open ports
+alias ports='netstat -tulanp'
+
+# If nmap is installed, set an alias for a network scan of a host (takes a while)
+# Scan delay slows things down but reduces throttling, anti-ddos, auto-block
+# Link: https://nmap.org/
+# Example: netscan localhost
+if [[ -x "$(command -v nmap)" ]]; then
+	alias netscan='sudo nmap --scan-delay 1.1s -v --resolve-all -A -sTUV'
+fi
+
+# Show all hosts in ssh config
+alias showhosts="sed -rn 's/^\s*Host\s+(.*)\s*/\1/ip' ~/.ssh/config"
+
+# Get local IP addresses
+if [[ -x "$(command -v ip)" ]]; then
+  alias iplocal="ip -br -c a"
+else
+  alias iplocal="ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'"
+fi
+
+# Get public IP address (several options)
+if [[ -x "$(command -v curl)" ]]; then
+  alias ipexternal="curl -s ifconfig.me && echo"
+elif [[ -x "$(command -v wget)" ]]; then
+  alias ipexternal="wget -qO- ifconfig.me && echo"
+fi
+
+# Add an "alert" alias for long running commands
+# Example: sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+#######################################################
+# Visual
+#######################################################
+
+# Colorize the grep command output for ease of use (good for log files)
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+
+# Colorize messages for the kernel ring buffer
+alias dmesg='dmesg --color'
+
+# Clear the screen with both clear and cls shorthand
+alias cls='clear'
+alias c='clear'
+
+# Alias For bat
+# Link: https://github.com/sharkdp/bat
+if [[ -x "$(command -v bat)" ]]; then
+  alias cat='bat'
+elif [[ -x "$(command -v batcat)" ]]; then  # batcat on Ubuntu
+  alias bat='batcat'
+  alias cat='batcat'
+fi
+
+#######################################################
+# Miscellaneous
+#######################################################
+
+# Keep aliases in sudo
+alias sudo='sudo '
+
+# Alias to exit the terminal
+alias q='exit'
+
+# Alias to clear RAM memory cache, buffer and swap space
+# Link: https://www.tecmint.com/clear-ram-memory-cache-buffer-and-swap-space-on-linux/
+alias flushcache="sudo free -h && sudo su -c \"echo 3 >'/proc/sys/vm/drop_caches' && swapoff -a && swapon -a && printf '\n\033[1;33m%s\033[0m\n\n' 'Ram-cache and Swap Cleared'\" root&& free -h"
+
+#######################################################
+# General Function "Aliases"
+#######################################################
+
+# Extracts any archive(s)
+function extract() {
+	for archive; do
+		if [ -f "$archive" ] ; then
+			case "$archive" in
+				*.tar.bz2)   tar xvjf "$archive"   ;;
+				*.tar.gz)    tar xvzf "$archive"   ;;
+				*.bz2)       bunzip2 "$archive"    ;;
+				*.rar)       rar x "$archive"      ;;
+				*.gz)        gunzip "$archive"     ;;
+				*.tar)       tar xvf "$archive"    ;;
+				*.tbz2)      tar xvjf "$archive"   ;;
+				*.tgz)       tar xvzf "$archive"   ;;
+				*.zip)       unzip "$archive"      ;;
+				*.Z)         uncompress "$archive" ;;
+				*.7z)        7z x "$archive"       ;;
+				*)           echo "don't know how to extract '$archive'..." ;;
+			esac
+		else
+			echo "'$archive' is not a valid file!"
+		fi
+	done
+}
+
+# View a comma delimited (.CSV) file
+function csvview() {
+	cat "${@}" | sed 's/,/ ,/g' | column -t -s, | less -S
+}
+
+# Searches for text in all files in the current folder
+function findtext() {
+	# If The Silver Searcher is installed, use that
+	# Link: https://github.com/ggreer/the_silver_searcher
+	# Hint: You can use --ignore "dir/or/file"
+	if [[ -x "$(command -v ag)" ]]; then
+		ag --color --ignore-case --hidden --literal "${@}" 2> /dev/null
+
+	# If ripgrep is installed, use that
+	# Link: https://github.com/BurntSushi/ripgrep
+	elif [[ -x "$(command -v rg)" ]]; then
+		rg --pretty "${@}" | more
+
+	else # Use grep
+		# Link: https://www.howtogeek.com/496056/how-to-use-the-grep-command-on-linux/
+		# Hint: You can use --exclude='/dir/or/file'
+		# -i case-insensitive
+		# -I ignore binary files
+		# -H causes filename to be printed
+		# -r recursive search
+		# -n causes line number to be printed
+		# optional: -F treat search term as a literal, not a regular expression
+		# optional: -l only print filenames and not the matching lines ex. grep -irl "$@" *
+		grep -iIHrn --color=always "${@}" . | $PAGER -r
+	fi
+}
+
+# Copy file with a progress bar
+function cpp() {
+  if [[ -x "$(command -v rsync)" ]]; then
+    # rsync -avh --progress "${1}" "${2}"
+    rsync -ah --info=progress2 "${1}" "${2}"
+  else
+    set -e
+    strace -q -ewrite cp -- "${1}" "${2}" 2>&1 \
+    | awk '{
+    count += $NF
+    if (count % 10 == 0) {
+      percent = count / total_size * 100
+      printf "%3d%% [", percent
+      for (i=0;i<=percent;i++)
+        printf "="
+        printf ">"
+        for (i=percent;i<100;i++)
+          printf " "
+          printf "]\r"
+        }
+      }
+    END { print "" }' total_size=$(stat -c '%s' "${1}") count=0
+  fi
+}
+
+# Copy and go to the directory
+function cpg() {
+	if [[ -d "$2" ]];then
+		cp "$1" "$2" && cd "$2"
+	else
+		cp "$1" "$2"
+	fi
+}
+
+# Move and go to the directory
+function mvg() {
+	if [[ -d "$2" ]];then
+		mv "$1" "$2" && cd "$2"
+	else
+		mv "$1" "$2"
+	fi
+}
+
+# Create and go to the directory
+function mkdirg() {
+	mkdir -p "$@"
+	cd "$@"
+}
+
+# Repeat a command n times
+function repeat() {
+	local i max
+	max=$1; shift;
+	for ((i=1; i <= max ; i++)); do  # --> C-like syntax
+		eval "$@";
+	done
+}
+
+# Finds the current Linux distribution, name, version, and kernel version
+function ver() {
+	if [[ -x "$(command -v uname)" ]]; then
+		uname --kernel-name --kernel-release --machine && echo
+	fi
+	if [[ -x "$(command -v hostnamectl)" ]]; then
+		hostnamectl && echo
+	fi
+	if [[ -x "$(command -v lsb_release)" ]]; then
+		lsb_release -a && echo
+	fi
+	cat /etc/*-release 2> /dev/null
+}
+
+# YouTubeDL
+# Needs yt-dlp to be installed
+function ytdl() {
+    # Function to display help message
+    show_help() {
+        echo "ytdl - A wrapper for yt-dlp to easily download videos and audio from YouTube and other platforms"
+        echo ""
+        echo "Usage: ytdl <URL> [-a] [additional yt-dlp options]"
+        echo ""
+        echo "Options:"
+        echo "  -a, --audio   Audio only mode (extracts MP3)"
+        echo "  -h, --help    Show this help message"
+        echo ""
+        echo "Examples:"
+        echo "  ytdl https://youtube.com/watch?v=example               # Download video in MKV format"
+        echo "  ytdl https://youtube.com/watch?v=example -a            # Extract audio as MP3"
+        echo "  ytdl https://youtube.com/watch?v=example -a --verbose  # Extract audio with additional yt-dlp options"
+    }
+
+    # Check if yt-dlp is installed
+    if ! command -v yt-dlp &> /dev/null; then
+        echo "Error: yt-dlp is not installed or not in PATH"
+        echo "Please visit: https://github.com/yt-dlp/yt-dlp#installation"
+        return 1
+    fi
+
+    # Handle no arguments case
+    if [[ $# -eq 0 ]]; then
+        show_help
+        return 0
+    fi
+    
+    local url=""
+    local audio_only=false
+    local extra_args=()
+    
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -a|--audio)
+                audio_only=true
+                shift
+                ;;
+            -h|--help)
+                show_help
+                return 0
+                ;;
+            *)
+                # First non-flag argument is treated as URL
+                if [[ -z "$url" ]]; then
+                    url="$1"
+                else
+                    # All other arguments go to yt-dlp
+                    extra_args+=("$1")
+                fi
+                shift
+                ;;
+        esac
+    done
+    
+    # Validate URL
+    if [[ -z "$url" ]]; then
+        echo "Error: No URL provided"
+        show_help
+        return 1
+    fi
+    
+    # Download according to mode
+    if [[ "$audio_only" == true ]]; then
+        echo "Downloading audio only..."
+        yt-dlp "$url" "${extra_args[@]}" --windows-filenames --embed-thumbnail --embed-subs --audio-quality 0 --extract-audio --audio-format mp3
+    else
+        echo "Downloading video..."
+        yt-dlp "$url" "${extra_args[@]}" --windows-filenames --sponsorblock-mark all --embed-thumbnail --embed-subs -f bestvideo+bestaudio --embed-chapters --remux-video mkv
+    fi
+}
+
+#######################################################
+# Improve navigation and searching your command history
+#######################################################
+
+# Search command line history
+alias h='history | grep'
+
+#######################################################
+# Settings and Exports
+#######################################################
+
+# Tell NCURSES to use UTF-8 encoding
+export NCURSES_NO_UTF8_ACS=1
+
+# Color for manpages in less makes manpages a little easier to read
+if [[ -f /usr/share/source-highlight/src-hilite-lesspipe.sh ]]; then
+	export LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
+elif [[ -x "$(command -v src-hilite-lesspipe.sh)" ]]; then
+	export LESSOPEN="| src-hilite-lesspipe.sh %s"
+fi
+
+# Upgrade less command functionality
+if [[ -x "$(command -v moar)" ]]; then
+	# https://github.com/walles/moar
+	export PAGER=moar
+	alias less='moar'
+elif [[ -n "$LESSOPEN" ]]; then
+	# Use less over most if it has syntax highlighting
+	export PAGER=less
+	alias less='less --LINE-NUMBERS'
+elif [[ -x "$(command -v most)" ]]; then
+	# https://www.jedsoft.org/most/
+	export PAGER=most
+	alias less='most'
+else
+	export PAGER=less
+	alias less='less --LINE-NUMBERS'
+fi
+
+# NOTE: Use \less with the back-slash to remove line numbers
+# or you can use -n or --line-numbers if moar/most are not installed
+export LESS='-x4 --ignore-case --RAW-CONTROL-CHARS --LONG-PROMPT --prompt=%t?f%f :stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
+
+# Make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
