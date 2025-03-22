@@ -112,16 +112,6 @@ if [[ -x "$(command -v systemctl)" ]]; then
 	# Find what systemd services have failed
 	alias failed='systemctl --failed'
 
-	# Get the status of a services
-	alias servicestatus='sudo systemctl status'
-
-	# Start or stop services
-	alias servicestart='sudo systemctl start'
-	alias servicestop='sudo systemctl stop'
-	alias servicekill='sudo systemctl kill'
-	alias servicerestart='sudo systemctl restart' # Stop and start
-	alias servicereload='sudo systemctl reload'   # Reload configuration
-
 	# Clear system log entries from the systemd journal
 	alias clearsystemlogs='echo -ne "\033[1;34mBefore\033[0m: "; journalctl --disk-usage; sudo journalctl --rotate; sudo journalctl --vacuum-time=1s; echo -ne "\033[1;34mAfter\033[0m: "; journalctl --disk-usage'
 fi

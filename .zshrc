@@ -73,6 +73,9 @@ if [[ -x "$(command -v fzf)" ]]; then
 	"
 fi
 
+# Configure git-auto-fetch options
+export GIT_AUTO_FETCH_INTERVAL=300
+
 #######################################################
 # Plugins
 #######################################################
@@ -93,6 +96,7 @@ zinit light Aloxaf/fzf-tab
 
 zinit snippet OMZP::sudo
 zinit snippet OMZP::command-not-found
+zinit snippet OMZP::git-auto-fetch
 
 zinit cdreplay -q
 
