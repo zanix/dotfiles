@@ -59,7 +59,7 @@ sudo cp ~/dotfiles/my_configs.vim /opt/vim_runtime/
 
 ## Requirements
 
-Install depenencies on your system.
+Install dependencies on your system.
 
 ### Arch
 
@@ -85,7 +85,7 @@ sudo pacman -Sy bat btop fastfetch
 sudo apt install fd-find fzf git ifstat neovim python3-venv stow yq zsh
 ```
 
-Install `oh-my-posh` globally using the offical install script
+Install `oh-my-posh` globally using the official install script
 
 ```shell
 curl -s https://ohmyposh.dev/install.sh | sudo bash -s -- -d /usr/local/bin

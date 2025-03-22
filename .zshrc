@@ -153,5 +153,11 @@ fi
 
 # Set up fzf key bindings and fuzzy completion
 if [[ -x "$(command -v fzf)" ]]; then
-  source <(fzf --zsh)
+  if fzf --zsh &>/dev/null; then
+    source <(fzf --zsh)
+  else
+    # Load fzf manually for older versions
+    source /usr/share/doc/fzf/examples/key-bindings.zsh
+    source /usr/share/doc/fzf/examples/completion.zsh
+  fi
 fi
