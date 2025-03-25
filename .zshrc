@@ -3,7 +3,7 @@ if [[ -n "$PS1" && -z "$TMUX" && -n "$SSH_TTY" ]]; then
   (tmux has-session -t $USER && tmux attach-session -t $USER) || tmux new-session -s $USER && exit 0
 fi
 
-# Display Fastfetch only once
+# Display Fastfetch in Tmux only once
 if [ -x "$(command -v fastfetch)" -a  -z "$_motd_listed" ]; then
   case "$TMUX_PANE" in
     %0) fastfetch

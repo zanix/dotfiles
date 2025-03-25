@@ -73,7 +73,7 @@ Install `ifstat` and `oh-my-posh` from the AUR
 yay ifstat oh-my-posh-bin
 ```
 
-Optional packages:
+#### Optional Arch packages
 
 ```shell
 sudo pacman -Sy bat btop fastfetch
@@ -91,10 +91,33 @@ Install `oh-my-posh` globally using the official install script
 curl -s https://ohmyposh.dev/install.sh | sudo bash -s -- -d /usr/local/bin
 ```
 
-Optional packages:
+#### Optional Ubuntu packages
 
 ```shell
 sudo pacman -Sy bat btop fastfetch
+```
+
+> [!WARNING] Zsh compinit on Ubuntu
+> The default behavior for Zsh in Ubuntu is to initialize `compinit` for every sessions.
+> This causes the prompt to load very slowly unless it is disabled.
+> The `.zshenv` file with the `skip_global_compinit=1` fixes this.
+
+### Other Software
+
+#### Node Version Manager
+
+Node Version Manager - POSIX-compliant bash script to manage multiple active node.js versions
+
+> [!CAUTION] Required for Mason in Nvim
+
+```shell
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
+```
+
+Install default version of node
+
+```shell
+nvm install node
 ```
 
 ## Installation
