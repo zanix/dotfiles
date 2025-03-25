@@ -4,5 +4,6 @@ background-opacity = 0.95
 background-blur-radius = 20
 window-height = 55
 window-width = 200
+mouse-hide-while-typing = true
 
 font-size = 11
