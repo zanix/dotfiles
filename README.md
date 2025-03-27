@@ -38,7 +38,8 @@ This repository contains my personal configuration files and scripts for optimiz
 
 ### Vim
 
-> [!WARNING] I use this for systems where I haven't updated to Neovim yet
+> [!NOTE]
+> I use this for systems where I haven't updated to Neovim yet
 
 I use the [Ultimate Vim Configuration](https://github.com/amix/vimrc) for a quick and decent setup
 
@@ -97,7 +98,7 @@ curl -s https://ohmyposh.dev/install.sh | sudo bash -s -- -d /usr/local/bin
 sudo pacman -Sy bat btop fastfetch
 ```
 
-> [!WARNING] Zsh compinit on Ubuntu
+> [!WARNING]
 > The default behavior for Zsh in Ubuntu is to initialize `compinit` for every sessions.
 > This causes the prompt to load very slowly unless it is disabled.
 > The `.zshenv` file with the `skip_global_compinit=1` fixes this.
@@ -108,7 +109,8 @@ sudo pacman -Sy bat btop fastfetch
 
 Node Version Manager - POSIX-compliant bash script to manage multiple active node.js versions
 
-> [!CAUTION] Required for Mason in Nvim
+> [!IMPORTANT]
+> Required for Mason in Nvim
 
 ```shell
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
