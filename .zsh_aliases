@@ -362,6 +362,19 @@ elif [[ -x "$(command -v batcat)" ]]; then  # batcat on Ubuntu
   alias cat='batcat'
 fi
 
+# Tokyonight color scheme for bat
+if [[ -x "$(command -v bat)" ]]; then
+	if [ ! -d "$(bat --config-dir)/themes" ]; then
+		mkdir -p "$(bat --config-dir)/themes"
+		curl -o "$(bat --config-dir)/themes/tokyonight_night.tmTheme" https://raw.githubusercontent.com/folke/tokyonight.nvim/main/extras/sublime/tokyonight_night.tmTheme
+	fi
+	if [ ! -d "$(bat --cache-dir)" ]; then
+		bat cache --build
+	fi
+	export BAT_THEME="tokyonight_night"
+	export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
+fi
+
 #######################################################
 # Miscellaneous
 #######################################################
