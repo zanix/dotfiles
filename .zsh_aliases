@@ -31,6 +31,17 @@ else
 fi
 
 #######################################################
+# Set default variable values
+#######################################################
+
+# If set to true, will not load anything that modifies the ls command or colors
+_SKIP_LS_COLORIZED=false
+
+# eza is a modern color replacement for ls that also has some Git support
+# Link: https://github.com/eza-community/eza
+_SKIP_EZA=false
+
+#######################################################
 # Add Common Binary Directories to Path
 #######################################################
 
@@ -121,22 +132,71 @@ fi
 #######################################################
 
 # Aliases for multiple directory listing commands
-alias ls='ls -Fh --color=always --group-directories-first'     # do add built-in colors to file types
-alias ll='ls -Fls'                    # long listing
-alias labc='ls -lAp'                  # sort alphabetically
-alias lx='ll -lAXBh'                  # sort by extension
-alias lk='ll -lASrh'                  # sort by size
-alias lt='ll -lAtrh'                  # sort by date
-alias lc='ll -lAcrh'                  # sort by change time
-alias lu='ll -lAurh'                  # sort by access time
-alias new='ls -lAtr | tail -10 | tac' # list recently created/updated files
-alias lw='ls -xAh'                    # wide listing format
-alias lm='ll -Alh | \less -S'         # pipe through less
-alias lr='ls -lRh'                    # recursive ls
-alias l.='ll -d .*'                   # show hidden files
-alias lfile="ls -l | egrep -v '^d'"   # files only
-alias ldir="ls -lA | egrep '^d'"      # directories only
-alias la='ls -lA'                     # long list, almost all, type, human readable
+if [[ $_SKIP_LS_COLORIZED = false ]]; then
+
+	# If eza is installed...
+	# Link: https://github.com/eza-community/eza
+	if [[ $_SKIP_EZA = false ]] && [[ -x "$(command -v eza)" ]]; then
+		# Add icons to eza if unicode and the icon paramter is supported
+		if [[ $(locale charmap) == 'UTF-8' ]]; then
+			(\eza --help | grep -q -e "--icons" &> /dev/null) && alias eza='eza --icons=always'
+		fi
+
+		alias ls='eza --all --classify --group-directories-first --color=auto --color-scale $@'
+		alias ll='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale $@'
+		alias labc='eza --grid --all --classify --color=auto --color-scale --sort name $@'
+		alias lx='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale --sort extension $@'
+		alias lk='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale --sort size $@'
+		alias lt='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale --sort modified $@'
+		alias lc='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale --changed --sort changed $@'
+		alias lu='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale --accessed --sort accessed $@'
+		alias new='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale --sort modified | tail -10 | tac $@'
+		alias lw='eza --all --classify --group-directories-first --color=auto --color-scale $@'
+		alias lm='\eza --long --all --classify --group-directories-first --color=always --color-scale $@ | \less -FRi'
+		alias lr='eza --grid --all --classify --group-directories-first --color=auto --color-scale --recurse $@'
+		alias l.='eza --all --all --classify --group-directories-first --list-dirs --color=auto --color-scale .* $@'
+		alias la='eza --long --all --links --group --modified --accessed --created --binary --header --inode --blocksize $@'
+		alias lfile='eza --all --classify --color=auto --color-scale --show-symlinks --only-files $@'
+		alias ldir='eza --all --classify --group-directories-first --color=auto --color-scale --show-symlinks --only-dirs $@'
+		alias ltree='\eza --all --git --group-directories-first --header --long --tree $@'
+
+	# Use ls with command line options
+	else
+		alias ls='ls -Fh --color=always --group-directories-first'
+		alias labc='ls -lAp'                  # sort alphabetically
+		alias lx='ll -lAXBh'                  # sort by extension
+		alias lk='ll -lASrh'                  # sort by size
+		alias lt='ll -lAtrh'                  # sort by date
+		alias lc='ll -lAcrh'                  # sort by change time
+		alias lu='ll -lAurh'                  # sort by access time
+		alias new='ls -lAtr | tail -10 | tac' # list recently created/updated files
+		alias lw='ls -xAh'                    # wide listing format
+		alias lm='ll -Alh | \less -S'         # pipe through less
+		alias lr='ls -lRh'                    # recursive ls
+		alias l.='ll -d .* --color=auto'      # show hidden files
+		alias lfile="ls -lA | egrep -v '^d'"  # files only
+		alias ldir="ls -lA | egrep '^d'"      # directories only
+		alias ltree='\tree -CAhF --dirsfirst' # tree view
+
+	fi
+else
+	alias ls='ls -Fh --group-directories-first'
+	alias ll='ls -Fls'                    # long listing
+	alias labc='ls -lap'                  # sort alphabetically
+	alias lx='ll -laXBh'                  # sort by extension
+	alias lk='ll -laSrh'                  # sort by size
+	alias lt='ll -latrh'                  # sort by date
+	alias lc='ll -lacrh'                  # sort by change time
+	alias lu='ll -laurh'                  # sort by access time
+	alias new='ls -latr | tail -10 | tac' # list recently created/updated files
+	alias lw='ls -xAh'                    # wide listing format
+	alias lm='ll -alh | \less -S'         # pipe through less
+	alias lr='ls -lRh'                    # recursive ls
+	alias l.='ll -d .*'                   # show hidden files
+	alias lfile="ls -l | egrep -v '^d'"   # files only
+	alias ldir="ls -la | egrep '^d'"      # directories only
+	alias ltree='\tree -CAhF --dirsfirst' # tree view
+fi
 
 # List all files larger than a given size
 # llfs +10k will find and display all files larger than 10 kilobytes in the currect directory
@@ -243,7 +303,7 @@ alias lsb='lsblk --fs --perms --output NAME,LABEL,TYPE,MOUNTPOINTS,FSTYPE,SIZE,F
 
 # Alias to fuzzy find files in the current folder(s), preview them, and launch in an editor
 # Link: https://github.com/junegunn/fzf
-if [[ -x "$(command -v fzf)" && -x "$(command -v bat)" ]]; then
+if [[ -x "$(command -v fzf)" ]] && ([[ -x "$(command -v bat)" ]] || [[ -x "$(command -v batcat)" ]]); then
   alias fzf='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"'
 fi
 
@@ -364,10 +424,7 @@ fi
 
 # Tokyonight color scheme for bat
 if [[ -x "$(command -v bat)" ]]; then
-	if [ ! -d "$(bat --config-dir)/themes" ]; then
-		mkdir -p "$(bat --config-dir)/themes"
-		curl -o "$(bat --config-dir)/themes/tokyonight_night.tmTheme" https://raw.githubusercontent.com/folke/tokyonight.nvim/main/extras/sublime/tokyonight_night.tmTheme
-	fi
+	# Generate the cache directory if it does not exist
 	if [ ! -d "$(bat --cache-dir)" ]; then
 		bat cache --build
 	fi

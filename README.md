@@ -56,6 +56,7 @@ sudo cp ~/dotfiles/my_configs.vim /opt/vim_runtime/
 
 - [bat](https://github.com/sharkdp/bat) - A cat(1) clone with wings
 - [Btop](https://github.com/aristocratos/btop) - A monitor of resources
+- [eza](https://github.com/eza-community/eza) - A modern alternative to ls
 - [Fastfetch](https://github.com/fastfetch-cli/fastfetch) - A maintained, feature-rich and performance oriented, neofetch like system information tool
 
 ## Requirements
@@ -77,13 +78,25 @@ yay ifstat oh-my-posh-bin
 #### Optional Arch packages
 
 ```shell
-sudo pacman -Sy bat btop fastfetch
+sudo pacman -Sy bat btop eza fastfetch
 ```
 
 ### Ubuntu/Debian
 
 ```shell
-sudo apt install fd-find fzf git ifstat neovim python3-venv stow yq zsh
+sudo apt install fd-find fzf git ifstat neovim python3-venv stow zsh
+```
+
+`yq` needs to be installed via snap or ppa
+
+```shell
+snap install yq --channel=v3/stable
+```
+
+```shell
+sudo add-apt-repository ppa:rmescandon/yq
+sudo apt update
+sudo apt install yq -y
 ```
 
 Install `oh-my-posh` globally using the official install script
@@ -95,11 +108,11 @@ curl -s https://ohmyposh.dev/install.sh | sudo bash -s -- -d /usr/local/bin
 #### Optional Ubuntu packages
 
 ```shell
-sudo pacman -Sy bat btop fastfetch
+sudo apt install bat btop eza fastfetch
 ```
 
 > [!WARNING]
-> The default behavior for Zsh in Ubuntu is to initialize `compinit` for every sessions.
+> The default behavior for Zsh in Ubuntu is to initialize `compinit` for every session.
 > This causes the prompt to load very slowly unless it is disabled.
 > The `.zshenv` file with the `skip_global_compinit=1` fixes this.
 
