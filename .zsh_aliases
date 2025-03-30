@@ -163,6 +163,7 @@ if [[ $_SKIP_LS_COLORIZED = false ]]; then
 	# Use ls with command line options
 	else
 		alias ls='ls -Fh --color=always --group-directories-first'
+		alias ll='ls -FAls'                   # long listing
 		alias labc='ls -lAp'                  # sort alphabetically
 		alias lx='ll -lAXBh'                  # sort by extension
 		alias lk='ll -lASrh'                  # sort by size
@@ -174,6 +175,7 @@ if [[ $_SKIP_LS_COLORIZED = false ]]; then
 		alias lm='ll -Alh | \less -S'         # pipe through less
 		alias lr='ls -lRh'                    # recursive ls
 		alias l.='ll -d .* --color=auto'      # show hidden files
+		alias la='ls -lAit --time-style=full-iso' # long listing with inode and group
 		alias lfile="ls -lA | egrep -v '^d'"  # files only
 		alias ldir="ls -lA | egrep '^d'"      # directories only
 		alias ltree='\tree -CAhF --dirsfirst' # tree view
@@ -181,7 +183,7 @@ if [[ $_SKIP_LS_COLORIZED = false ]]; then
 	fi
 else
 	alias ls='ls -Fh --group-directories-first'
-	alias ll='ls -Fls'                    # long listing
+	alias ll='ls -FAls'                   # long listing
 	alias labc='ls -lap'                  # sort alphabetically
 	alias lx='ll -laXBh'                  # sort by extension
 	alias lk='ll -laSrh'                  # sort by size
@@ -190,9 +192,10 @@ else
 	alias lu='ll -laurh'                  # sort by access time
 	alias new='ls -latr | tail -10 | tac' # list recently created/updated files
 	alias lw='ls -xAh'                    # wide listing format
-	alias lm='ll -alh | \less -S'         # pipe through less
+	alias lm='ll -Alh | \less -S'         # pipe through less
 	alias lr='ls -lRh'                    # recursive ls
 	alias l.='ll -d .*'                   # show hidden files
+	alias la='ls -lAit --time-style=full-iso' # long listing with inode and group
 	alias lfile="ls -l | egrep -v '^d'"   # files only
 	alias ldir="ls -la | egrep '^d'"      # directories only
 	alias ltree='\tree -CAhF --dirsfirst' # tree view
