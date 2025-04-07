@@ -581,10 +581,13 @@ function ver() {
 	cat /etc/*-release 2> /dev/null
 }
 
-# YouTubeDL
+#######################################################
+# YouTubeDL helper
 # Needs yt-dlp to be installed
+#######################################################
+
 function ytdl() {
-    # Function to display help message
+    # Display help message
     show_help() {
         echo "ytdl - A wrapper for yt-dlp to easily download videos and audio from YouTube and other platforms"
         echo ""
@@ -659,11 +662,12 @@ function ytdl() {
 }
 
 #######################################################
-# Improve navigation and searching your command history
+# Searching command history
 #######################################################
 
-# Search command line history
-alias h='history | grep'
+# Search command line history and fix zsh annoying behavior
+alias history='history 1'
+h() { if [ -z "$*" ]; then history 1; else history 1 | egrep "$@"; fi; }
 
 #######################################################
 # Settings and Exports
