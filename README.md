@@ -58,6 +58,7 @@ sudo cp ~/dotfiles/my_configs.vim /opt/vim_runtime/
 - [Btop](https://github.com/aristocratos/btop) - A monitor of resources
 - [eza](https://github.com/eza-community/eza) - A modern alternative to ls
 - [Fastfetch](https://github.com/fastfetch-cli/fastfetch) - A maintained, feature-rich and performance oriented, neofetch like system information tool
+- [Lazygit](https://github.com/jesseduffield/lazygit) - A simple terminal UI for git commands
 
 ## Requirements
 
@@ -78,7 +79,7 @@ yay ifstat oh-my-posh-bin
 #### Optional Arch packages
 
 ```shell
-sudo pacman -Sy bat btop eza fastfetch
+sudo pacman -Sy bat btop eza fastfetch lazygit
 ```
 
 ### Ubuntu/Debian
@@ -132,6 +133,15 @@ sudo apt install -y eza
 
 ```shell
 add-apt-repository -y ppa:zhangsongcui3371/fastfetch
+```
+
+`lazygit` needs to be installed manually
+
+```shell
+LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
+curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+tar xf lazygit.tar.gz lazygit
+sudo install lazygit -D -t /usr/local/bin/
 ```
 
 > [!WARNING]

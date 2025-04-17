@@ -112,6 +112,16 @@ alias e="edit"
 alias zshrc='${=EDITOR} ${ZDOTDIR:-$HOME}/.zshrc'
 
 #######################################################
+# Generic Aliases
+#######################################################
+
+# LazyGit - Terminal UI for git commands
+# Link: https://github.com/jesseduffield/lazygit
+if [[ -x "$(command -v lazygit)" ]]; then
+	alias lg='lazygit'
+fi
+
+#######################################################
 # Systemd Services
 #######################################################
 
