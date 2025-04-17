@@ -23,7 +23,7 @@ vim.opt.laststatus = 3
 vim.opt.mouse = "a"
 vim.opt.path:append({ "**" }) -- Finding files - Search down into subfolders
 vim.opt.scrolloff = 10
-vim.opt.shell = "fish"
+vim.opt.shell = "zsh"
 vim.opt.shiftwidth = 2
 vim.opt.showcmd = true
 vim.opt.smartindent = true

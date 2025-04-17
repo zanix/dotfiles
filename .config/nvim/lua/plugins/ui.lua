@@ -53,6 +53,7 @@ return {
 		end,
 	},
 
+	-- notification manager
 	{
 		"rcarriga/nvim-notify",
 		opts = {
@@ -60,6 +61,7 @@ return {
 		},
 	},
 
+	-- small qol plugins
 	{
 		"snacks.nvim",
 		opts = {

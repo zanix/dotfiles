@@ -29,12 +29,12 @@ This repository contains my personal configuration files and scripts for optimiz
 - for [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) **_(optional)_**
   - **find files**: [fd](https://github.com/sharkdp/fd)
 - a terminal that supports true color and _undercurl_: (I use ghostty)
-  - [ghostty](https://github.com/ghostty-org/ghostty) **_(Linux & Macos)_**
+  - [ghostty](https://github.com/ghostty-org/ghostty) **_(Linux & MacOS)_**
     - [config tool](https://ghostty.zerebos.com)
-  - [kitty](https://github.com/kovidgoyal/kitty) **_(Linux & Macos)_**
-  - [wezterm](https://github.com/wez/wezterm) **_(Linux, Macos & Windows)_**
-  - [alacritty](https://github.com/alacritty/alacritty) **_(Linux, Macos & Windows)_**
-  - [iterm2](https://iterm2.com) **_(Macos)_**
+  - [kitty](https://github.com/kovidgoyal/kitty) **_(Linux & MacOS)_**
+  - [wezterm](https://github.com/wez/wezterm) **_(Linux, MacOS & Windows)_**
+  - [alacritty](https://github.com/alacritty/alacritty) **_(Linux, MacOS & Windows)_**
+  - [iterm2](https://iterm2.com) **_(MacOS)_**
 
 ### Vim
 
@@ -84,6 +84,11 @@ sudo pacman -Sy bat btop eza fastfetch lazygit
 
 ### Ubuntu/Debian
 
+> [!WARNING]
+> The default behavior for Zsh in Ubuntu is to initialize `compinit` for every session.
+> This causes the prompt to load very slowly unless it is disabled.
+> The `.zshenv` file with the `skip_global_compinit=1` fixes this.
+
 ```shell
 sudo apt install fd-find fzf git ifstat neovim python3-venv stow zsh
 ```
@@ -109,10 +114,10 @@ curl -s https://ohmyposh.dev/install.sh | sudo bash -s -- -d /usr/local/bin
 #### Optional Ubuntu packages
 
 ```shell
-sudo apt install bat btop fastfetch
+sudo apt install bat btop
 ```
 
-`btop` needs to be isntalled via snap on Ububtu 22.04 and older
+`btop` needs to be installed via snap on Ubuntu 22.04 and older
 
 ```shell
 sudo snap install btop
@@ -135,6 +140,10 @@ sudo apt install -y eza
 add-apt-repository -y ppa:zhangsongcui3371/fastfetch
 ```
 
+```shell
+sudo apt install fastfetch
+```
+
 `lazygit` needs to be installed manually
 
 ```shell
@@ -144,11 +153,6 @@ tar xf lazygit.tar.gz lazygit
 sudo install lazygit -D -t /usr/local/bin/
 ```
 
-> [!WARNING]
-> The default behavior for Zsh in Ubuntu is to initialize `compinit` for every session.
-> This causes the prompt to load very slowly unless it is disabled.
-> The `.zshenv` file with the `skip_global_compinit=1` fixes this.
-
 ### Other Software
 
 #### Node Version Manager
@@ -156,7 +160,7 @@ sudo install lazygit -D -t /usr/local/bin/
 Node Version Manager - POSIX-compliant bash script to manage multiple active node.js versions
 
 > [!IMPORTANT]
-> Required for Mason in Nvim
+> Node is required for Mason in Nvim, and NVM is how I install Node
 
 ```shell
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
