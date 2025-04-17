@@ -677,7 +677,7 @@ function ytdl() {
 
 # Search command line history and fix zsh annoying behavior
 alias history='history 1'
-h() { if [ -z "$*" ]; then history 1; else history 1 | egrep "$@"; fi; }
+h() { if [ -z "$*" ]; then history; else history | grep "$@"; fi; }
 
 #######################################################
 # Settings and Exports
