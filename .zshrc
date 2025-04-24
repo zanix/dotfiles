@@ -34,10 +34,10 @@ source "${ZINIT_HOME}/zinit.zsh"
 #######################################################
 
 # Add oh-my-zsh style key bindings.
-zinit ice depth=1; zinit load "NickKaramoff/ohmyzsh-key-bindings"
+zinit ice depth=1; zinit load "kytta/ohmyzsh-key-bindings"
 
 #######################################################
-# Environemt Variables
+# Environment Variables
 #######################################################
 
 # Set directories
@@ -76,8 +76,29 @@ if [[ -x "$(command -v fzf)" ]]; then
   "
 fi
 
+# Tokyonight color scheme for bat
+if [[ -x "$(command -v bat)" ]]; then
+	# Generate the cache directory if it does not exist
+	if [ ! -d "$(bat --cache-dir)" ]; then
+		bat cache --build
+	fi
+	export BAT_THEME="tokyonight_night"
+	export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
+elif [[ -x "$(command -v batcat)" ]]; then
+  # Generate the cache directory if it does not exist
+  if [ ! -d "$(batcat --cache-dir)" ]; then
+    batcat cache --build
+  fi
+  export BAT_THEME="tokyonight_night"
+  export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | batcat -p -lman'"
+fi
+
 # Configure git-auto-fetch options
 export GIT_AUTO_FETCH_INTERVAL=300
+
+# Autoload venv for python
+export PYTHON_AUTO_VRUN=true
+export PYTHON_VENV_NAME=".venv"
 
 #######################################################
 # Plugins
@@ -100,6 +121,7 @@ zinit light Aloxaf/fzf-tab
 zinit snippet OMZP::sudo
 zinit snippet OMZP::command-not-found
 zinit snippet OMZP::git-auto-fetch
+zinit snippet OMZP::python
 
 zinit cdreplay -q
 
@@ -145,6 +167,35 @@ setopt hist_ignore_all_dups
 setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
+
+#######################################################
+# Add Common Binary Directories to Path
+#######################################################
+
+# Add directories to the end of the path if they exist and are not already in the path
+# Link: https://superuser.com/questions/39751/add-directory-to-path-if-its-not-already-there
+function pathappend() {
+  for ARG in "$@"
+  do
+    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+      PATH="${PATH:+"$PATH:"}$ARG"
+    fi
+  done
+}
+
+# Add directories to the beginning of the path if they exist and are not already in the path
+function pathprepend() {
+  for ARG in "$@"
+  do
+    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+      PATH="$ARG${PATH:+":$PATH"}"
+    fi
+  done
+}
+
+# Add the most common personal binary paths located inside the home folder
+# (directories are only added if they exist)
+pathprepend "$HOME/bin" "$HOME/sbin" "$HOME/.local/bin" "$HOME/local/bin" "$HOME/.bin"
 
 #######################################################
 # Aliases and Functions

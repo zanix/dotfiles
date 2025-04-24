@@ -42,35 +42,6 @@ _SKIP_LS_COLORIZED=false
 _SKIP_EZA=false
 
 #######################################################
-# Add Common Binary Directories to Path
-#######################################################
-
-# Add directories to the end of the path if they exist and are not already in the path
-# Link: https://superuser.com/questions/39751/add-directory-to-path-if-its-not-already-there
-function pathappend() {
-  for ARG in "$@"
-  do
-    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
-      PATH="${PATH:+"$PATH:"}$ARG"
-    fi
-  done
-}
-
-# Add directories to the beginning of the path if they exist and are not already in the path
-function pathprepend() {
-  for ARG in "$@"
-  do
-    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
-      PATH="$ARG${PATH:+":$PATH"}"
-    fi
-  done
-}
-
-# Add the most common personal binary paths located inside the home folder
-# (these directories are only added if they exist)
-pathprepend "$HOME/bin" "$HOME/sbin" "$HOME/.local/bin" "$HOME/local/bin" "$HOME/.bin"
-
-#######################################################
 # Alias to run the default editor
 #######################################################
 
@@ -433,16 +404,6 @@ if [[ -x "$(command -v bat)" ]]; then
 elif [[ -x "$(command -v batcat)" ]]; then  # batcat on Ubuntu
   alias bat='batcat'
   alias cat='batcat'
-fi
-
-# Tokyonight color scheme for bat
-if [[ -x "$(command -v bat)" ]]; then
-	# Generate the cache directory if it does not exist
-	if [ ! -d "$(bat --cache-dir)" ]; then
-		bat cache --build
-	fi
-	export BAT_THEME="tokyonight_night"
-	export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
 fi
 
 #######################################################
