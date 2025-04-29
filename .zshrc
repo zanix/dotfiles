@@ -196,6 +196,7 @@ function pathprepend() {
 # Add the most common personal binary paths located inside the home folder
 # (directories are only added if they exist)
 pathprepend "$HOME/bin" "$HOME/sbin" "$HOME/.local/bin" "$HOME/local/bin" "$HOME/.bin"
+pathappend "$HOME/.composer/vendor/bin" "$HOME/.config/composer/vendor/bin"
 
 #######################################################
 # Aliases and Functions

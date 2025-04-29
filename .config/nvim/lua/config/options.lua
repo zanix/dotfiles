@@ -2,6 +2,9 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 
 vim.g.mapleader = " "
+if vim.env.TMUX then
+  vim.g.clipboard = "tmux"
+end
 
 vim.opt.encoding = "utf-8"
 vim.opt.fileencoding = "utf-8"

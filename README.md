@@ -67,7 +67,7 @@ Install dependencies on your system.
 ### Arch
 
 ```shell
-sudo pacman -Sy fd fzf git neovim stow yq zsh
+sudo pacman -Sy fd fzf git neovim stow wl-clipboard yq zsh
 ```
 
 Install `ifstat` and `oh-my-posh` from the AUR
@@ -90,7 +90,7 @@ sudo pacman -Sy bat btop eza fastfetch lazygit
 > The `.zshenv` file with the `skip_global_compinit=1` fixes this.
 
 ```shell
-sudo apt install fd-find fzf git ifstat neovim python3-venv stow zsh
+sudo apt install fd-find fzf git ifstat neovim python3-venv stow wl-clipboard zsh
 ```
 
 `yq` needs to be installed via snap or ppa

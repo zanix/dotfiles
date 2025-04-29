@@ -424,6 +424,12 @@ alias flushcache="sudo free -h && sudo su -c \"echo 3 >'/proc/sys/vm/drop_caches
 # General Function "Aliases"
 #######################################################
 
+# Time the startup of an interactive shell
+timezsh() {
+  shell=${1-$SHELL}
+  for i in $(seq 1 10); do time $shell -i -c exit; done
+}
+
 # Extracts any archive(s)
 function extract() {
 	for archive; do
