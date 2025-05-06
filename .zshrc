@@ -196,7 +196,7 @@ function pathprepend() {
 # Add the most common personal binary paths located inside the home folder
 # (directories are only added if they exist)
 pathprepend "$HOME/bin" "$HOME/sbin" "$HOME/.local/bin" "$HOME/local/bin" "$HOME/.bin"
-pathappend "$HOME/.composer/vendor/bin" "$HOME/.config/composer/vendor/bin"
+pathappend "$HOME/.phpenv/bin" "$HOME/.composer/vendor/bin" "$HOME/.config/composer/vendor/bin"
 
 #######################################################
 # Aliases and Functions
@@ -219,4 +219,9 @@ if [[ -x "$(command -v fzf)" ]]; then
     source /usr/share/doc/fzf/examples/key-bindings.zsh
     source /usr/share/doc/fzf/examples/completion.zsh
   fi
+fi
+
+# Initialize phpenv
+if [[ -x "$(command -v phpenv)" ]]; then
+  eval "$(phpenv init -)"
 fi

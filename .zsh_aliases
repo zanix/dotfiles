@@ -305,7 +305,7 @@ alias today='date +"%Y-%m-%d"'
 alias stopwatch='date && echo "Press CTRL-D to stop" && time read'
 
 #######################################################
-### CPU, Memory, and Processes
+# CPU, Memory, and Processes
 #######################################################
 
 # Display amount of free and used memory
@@ -581,7 +581,7 @@ function ytdl() {
     }
 
     # Check if yt-dlp is installed
-    if ! command -v yt-dlp &> /dev/null; then
+		if [[ ! -x "$(command -v yt-dlp)" ]]; then
         echo "Error: yt-dlp is not installed or not in PATH"
         echo "Please visit: https://github.com/yt-dlp/yt-dlp#installation"
         return 1
