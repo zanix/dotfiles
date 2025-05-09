@@ -204,6 +204,14 @@ alias ..3='..2; ..'
 alias ..4='..3; ..'
 alias ..5='..4; ..'
 
+# Navigation
+if [[ -d $HOME/Downloads ]]; then
+	alias dl='cd ~/Downloads'
+fi
+if [[ -d /mnt/DevDrive ]]; then
+	alias devdrive='cd /mnt/DevDrive'
+fi
+
 #######################################################
 # Find Files or File Information
 #######################################################
@@ -287,8 +295,12 @@ alias lsb='lsblk --fs --perms --output NAME,LABEL,TYPE,MOUNTPOINTS,FSTYPE,SIZE,F
 
 # Alias to fuzzy find files in the current folder(s), preview them, and launch in an editor
 # Link: https://github.com/junegunn/fzf
-if [[ -x "$(command -v fzf)" ]] && ([[ -x "$(command -v bat)" ]] || [[ -x "$(command -v batcat)" ]]); then
-  alias fzf='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"'
+if [[ -x "$(command -v fzf)" ]] && [[ ! -z ${batname+x} ]]; then
+	if [[ -x "$(command -v fzf-preview.sh)" ]] && [[ -x "$(command -v chafa)" ]]; then
+  	alias fzf='fzf --preview "fzf-preview.sh {}"'
+	else
+  	alias fzf='fzf --preview "$batname --style=numbers --color=always --line-range :500 {}"'
+	fi
 fi
 
 #######################################################
@@ -399,11 +411,8 @@ alias c='clear'
 
 # Alias For bat
 # Link: https://github.com/sharkdp/bat
-if [[ -x "$(command -v bat)" ]]; then
-  alias cat='bat'
-elif [[ -x "$(command -v batcat)" ]]; then  # batcat on Ubuntu
-  alias bat='batcat'
-  alias cat='batcat'
+if [[ ! -z ${batname+x} ]]; then
+  alias cat='${batname}'
 fi
 
 #######################################################

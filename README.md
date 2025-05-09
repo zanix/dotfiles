@@ -58,7 +58,11 @@ sudo cp ~/dotfiles/my_configs.vim /opt/vim_runtime/
 - [Btop](https://github.com/aristocratos/btop) - A monitor of resources
 - [eza](https://github.com/eza-community/eza) - A modern alternative to ls
 - [Fastfetch](https://github.com/fastfetch-cli/fastfetch) - A maintained, feature-rich and performance oriented, neofetch like system information tool
+- [Lazydocker](https://github.com/jesseduffield/lazydocker) - The lazier way to manage everything docker
 - [Lazygit](https://github.com/jesseduffield/lazygit) - A simple terminal UI for git commands
+- [nvm](https://github.com/nvm-sh/nvm) - Node Version Manager - POSIX-compliant bash script to manage multiple active node.js versions
+- [phpenv](https://github.com/phpenv/phpenv) - Simple PHP version management
+  - [php-build](https://github.com/php-build/php-build) - Builds PHP so that multiple versions can be used side by side
 
 ## Requirements
 
@@ -79,7 +83,7 @@ yay ifstat oh-my-posh-bin
 #### Optional Arch packages
 
 ```shell
-sudo pacman -Sy bat btop eza fastfetch lazygit
+sudo pacman -Sy bat btop chafa eza fastfetch lazydocker lazygit
 ```
 
 ### Ubuntu/Debian
@@ -114,7 +118,7 @@ curl -s https://ohmyposh.dev/install.sh | sudo bash -s -- -d /usr/local/bin
 #### Optional Ubuntu packages
 
 ```shell
-sudo apt install bat btop
+sudo apt install bat btop chafa
 ```
 
 `btop` needs to be installed via snap on Ubuntu 22.04 and older
@@ -144,6 +148,13 @@ add-apt-repository -y ppa:zhangsongcui3371/fastfetch
 sudo apt install fastfetch
 ```
 
+`lazydocker` needs to be installed manually
+
+```shell
+DIR=/usr/local/bin/
+curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | sudo bash
+```
+
 `lazygit` needs to be installed manually
 
 ```shell
@@ -170,6 +181,37 @@ Install default version of node
 
 ```shell
 nvm install node
+```
+
+#### PHPEnv
+
+PHP multi-version installation and management for humans
+
+> [!NOTE]
+> This is optional and only needed for PHP development
+
+```shell
+git clone https://github.com/phpenv/phpenv.git ~/.phpenv
+```
+
+> Path and init are in `~/.zshrc` when `~/.phpenv` directory exists
+
+Add php-build
+
+```shell
+git clone https://github.com/php-build/php-build $(phpenv root)/plugins/php-build
+```
+
+Install required php version
+
+```shell
+phpenv install <php-version>
+```
+
+Rebuild php shim binaries after installing a new php version
+
+```shell
+phpenv rehash
 ```
 
 ## Installation

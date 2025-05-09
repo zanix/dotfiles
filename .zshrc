@@ -76,21 +76,21 @@ if [[ -x "$(command -v fzf)" ]]; then
   "
 fi
 
+# Sometimes bat is installed as batcat.
+if [[ -x "$(command -v batcat)" ]]; then
+  batname="batcat"
+elif [[ -x "$(command -v bat)" ]]; then
+  batname="bat"
+fi
+
 # Tokyonight color scheme for bat
-if [[ -x "$(command -v bat)" ]]; then
+if [[ ! -z ${batname+x} ]]; then
 	# Generate the cache directory if it does not exist
-	if [ ! -d "$(bat --cache-dir)" ]; then
-		bat cache --build
+	if [ ! -d "$($batname --cache-dir)" ]; then
+		$batname cache --build
 	fi
 	export BAT_THEME="tokyonight_night"
-	export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | bat -p -lman'"
-elif [[ -x "$(command -v batcat)" ]]; then
-  # Generate the cache directory if it does not exist
-  if [ ! -d "$(batcat --cache-dir)" ]; then
-    batcat cache --build
-  fi
-  export BAT_THEME="tokyonight_night"
-  export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | batcat -p -lman'"
+	export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | $batname -p -lman'"
 fi
 
 # Configure git-auto-fetch options
@@ -128,8 +128,7 @@ zinit cdreplay -q
 # Cache oh-my-posh init to avoid recomputation
 local -r omp_cache=$cache_dir/oh-my-posh-init.zsh
 local -r omp_config=$config_dir/ohmyposh/powerlevel10k.omp.json
-if [[ ! -f $omp_cache || ! -f $omp_config || $omp_config -nt $omp_cache ||
-      $(which oh-my-posh) -nt $omp_cache ]]; then
+if [[ ! -f $omp_cache || ! -f $omp_config || $omp_config -nt $omp_cache || $(which oh-my-posh) -nt $omp_cache ]]; then
   mkdir -p ~/.cache
   oh-my-posh init zsh --config $omp_config > $omp_cache
 fi
