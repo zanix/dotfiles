@@ -205,7 +205,7 @@
       "type": "rprompt"
     }
   ],
-  "console_title_template": "{{ if not .Env.TMUX}}{{ .UserName }}@{{ .HostName }} :: {{ end }}{{ .Shell }} in {{ .PWD }}",
+  "console_title_template": "{{ .HostName }}:{{ .UserName }}:{{ .Shell }} {{ .PWD }}",
   "transient_prompt": {
     "background": "transparent",
     "foreground": "green",

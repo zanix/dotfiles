@@ -444,21 +444,28 @@ function extract() {
 	for archive; do
 		if [ -f "$archive" ] ; then
 			case "$archive" in
-				*.tar.bz2)   tar xvjf "$archive"   ;;
-				*.tar.gz)    tar xvzf "$archive"   ;;
-				*.bz2)       bunzip2 "$archive"    ;;
-				*.rar)       rar x "$archive"      ;;
-				*.gz)        gunzip "$archive"     ;;
-				*.tar)       tar xvf "$archive"    ;;
-				*.tbz2)      tar xvjf "$archive"   ;;
-				*.tgz)       tar xvzf "$archive"   ;;
-				*.zip)       unzip "$archive"      ;;
-				*.Z)         uncompress "$archive" ;;
-				*.7z)        7z x "$archive"       ;;
-				*)           echo "don't know how to extract '$archive'..." ;;
+				*.cbt|*.tar.bz2|*.tar.gz|*.tar.xz|*.tbz2|*.tgz|*.txz|*.tar)
+										  tar xvf "$archive"       ;;
+				*.lzma)       unlzma ./"$archive"      ;;
+				*.bz2)        bunzip2 ./"$archive"     ;;
+				*.cbr|*.rar)
+										  unrar x -ad ./"$archive" ;;
+				*.gz)         gunzip ./"$archive"      ;;
+				*.cbz|*.epub|*.zip)
+				              unzip ./"$archive"       ;;
+				*.z)          uncompress ./"$archive"  ;;
+				*.7z|*.arj|*.cab|*.cb7|*.chm|*.deb|*.dmg|*.iso|*.lzh|*.msi|*.pkg|*.rpm|*.udf|*.wim|*.xar)
+										  7z x ./"$archive"        ;;
+				*.xz)         unxz ./"$archive"        ;;
+				*.exe)        cabextract ./"$archive"  ;;
+				*.cpio)       cpio -id < ./"$archive"  ;;
+				*.cba|*.ace)  unace x ./"$archive"     ;;
+				*)          	echo "don't know how to extract '$archive'..."
+                      return 1
+											;;
 			esac
 		else
-			echo "'$archive' is not a valid file!"
+			echo "'$archive' does not exist!"
 		fi
 	done
 }
