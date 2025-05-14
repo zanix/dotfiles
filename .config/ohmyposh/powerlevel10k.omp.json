@@ -205,7 +205,7 @@
       "type": "rprompt"
     }
   ],
-  "console_title_template": "{{ .HostName }}:{{ .UserName }}:{{ .Shell }} {{ .PWD }}",
+  "console_title_template": "{{ .UserName }}@{{ .HostName }}:{{ .Shell }} {{ .PWD }}",
   "transient_prompt": {
     "background": "transparent",
     "foreground": "green",
