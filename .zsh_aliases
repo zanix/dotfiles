@@ -92,6 +92,9 @@ if [[ -x "$(command -v lazygit)" ]]; then
 	alias lg='lazygit'
 fi
 
+# Create a new tmux session named after the current directory
+alias tn="tmux new -s $(pwd | sed 's/.*\///g')"
+
 #######################################################
 # Systemd Services
 #######################################################
