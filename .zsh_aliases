@@ -158,7 +158,7 @@ if [[ $_SKIP_LS_COLORIZED = false ]]; then
 		alias lw='ls -xAh'                    # wide listing format
 		alias lm='ll -Alh | \less -S'         # pipe through less
 		alias lr='ls -lRh'                    # recursive ls
-		alias l.='ll -d .* --color=auto'      # show hidden files
+		alias l.='ll -d .*'                   # show hidden files
 		alias la='ls -lAit --time-style=full-iso' # long listing with inode and group
 		alias lfile="ls -lA | egrep -v '^d'"  # files only
 		alias ldir="ls -lA | egrep '^d'"      # directories only
@@ -392,13 +392,13 @@ elif [[ -x "$(command -v wget)" ]]; then
   alias ipexternal="wget -qO- ifconfig.me && echo"
 fi
 
-# Add an "alert" alias for long running commands
-# Example: sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
 #######################################################
 # Visual
 #######################################################
+
+# Add an "alert" alias for long running commands
+# Example: sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Colorize the grep command output for ease of use (good for log files)
 alias grep='grep --color=auto'

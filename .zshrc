@@ -85,12 +85,12 @@ fi
 
 # Tokyonight color scheme for bat
 if [[ ! -z ${batname+x} ]]; then
-	# Generate the cache directory if it does not exist
-	if [ ! -d "$($batname --cache-dir)" ]; then
-		$batname cache --build
-	fi
-	export BAT_THEME="tokyonight_night"
-	export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | $batname -p -lman'"
+  # Generate the cache directory if it does not exist
+  if [ ! -d "$($batname --cache-dir)" ]; then
+    $batname cache --build
+  fi
+  export BAT_THEME="tokyonight_night"
+  export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | $batname -p -lman'"
 fi
 
 # Configure git-auto-fetch options
@@ -218,9 +218,12 @@ if [[ -x "$(command -v fzf)" ]]; then
     source /usr/share/doc/fzf/examples/key-bindings.zsh
     source /usr/share/doc/fzf/examples/completion.zsh
   fi
+elif [ -f ~/.fzf.zsh ]; then
+  source ~/.fzf.zsh
 fi
 
 # Initialize phpenv
 if [[ -x "$(command -v phpenv)" ]]; then
   eval "$(phpenv init -)"
 fi
+
