@@ -23,7 +23,7 @@ This repository contains my personal configuration files and scripts for optimiz
 
 ### Neovim
 
-- Neovim >= **0.9.0** (needs to be built with **LuaJIT**)
+- [Neovim](https://github.com/neovim/neovim) >= **0.10.0** (needs to be built with **LuaJIT**)
 - Git >= **2.19.0**
 - [LazyVim](https://www.lazyvim.org)
 - a **C** compiler for `nvim-treesitter`. See [here](https://github.com/nvim-treesitter/nvim-treesitter#requirements)
@@ -95,7 +95,31 @@ sudo pacman -Sy bat btop chafa eza fastfetch lazydocker lazygit
 > The `.zshenv` file with the `skip_global_compinit=1` fixes this.
 
 ```shell
-sudo apt install fd-find fzf git ifstat neovim python3-venv stow wl-clipboard zsh
+sudo apt install fd-find git ifstat python3-venv stow wl-clipboard zsh
+```
+
+Install fzf via git
+
+```shell
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install --no-bash --no-fish --no-update-rc
+```
+
+Neovim needs to be installed via the appimage package
+
+```shell
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
+chmod u+x nvim-linux-x86_64.appimage
+```
+
+Install for all users or for the current user
+
+```shell
+mv nvim-linux-x86_64.appimage ~/.local/bin/nvim
+```
+
+```shell
+mv nvim-linux-x86_64.appimage /usr/local/bin/nvim
 ```
 
 `yq` needs to be installed via snap or ppa
