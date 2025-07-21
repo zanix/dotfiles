@@ -101,6 +101,36 @@ export PYTHON_AUTO_VRUN=true
 export PYTHON_VENV_NAME=".venv"
 
 #######################################################
+# Add Common Binary Directories to Path
+#######################################################
+
+# Add directories to the end of the path if they exist and are not already in the path
+# Link: https://superuser.com/questions/39751/add-directory-to-path-if-its-not-already-there
+function pathappend() {
+  for ARG in "$@"
+  do
+    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+      PATH="${PATH:+"$PATH:"}$ARG"
+    fi
+  done
+}
+
+# Add directories to the beginning of the path if they exist and are not already in the path
+function pathprepend() {
+  for ARG in "$@"
+  do
+    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+      PATH="$ARG${PATH:+":$PATH"}"
+    fi
+  done
+}
+
+# Add the most common personal binary paths located inside the home folder
+# (directories are only added if they exist)
+pathprepend "$HOME/bin" "$HOME/sbin" "$HOME/.local/bin" "$HOME/local/bin" "$HOME/.bin"
+pathappend "$HOME/.phpenv/bin" "$HOME/.composer/vendor/bin" "$HOME/.config/composer/vendor/bin"
+
+#######################################################
 # Plugins
 #######################################################
 
@@ -168,36 +198,6 @@ setopt hist_ignore_dups
 setopt hist_find_no_dups
 
 #######################################################
-# Add Common Binary Directories to Path
-#######################################################
-
-# Add directories to the end of the path if they exist and are not already in the path
-# Link: https://superuser.com/questions/39751/add-directory-to-path-if-its-not-already-there
-function pathappend() {
-  for ARG in "$@"
-  do
-    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
-      PATH="${PATH:+"$PATH:"}$ARG"
-    fi
-  done
-}
-
-# Add directories to the beginning of the path if they exist and are not already in the path
-function pathprepend() {
-  for ARG in "$@"
-  do
-    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
-      PATH="$ARG${PATH:+":$PATH"}"
-    fi
-  done
-}
-
-# Add the most common personal binary paths located inside the home folder
-# (directories are only added if they exist)
-pathprepend "$HOME/bin" "$HOME/sbin" "$HOME/.local/bin" "$HOME/local/bin" "$HOME/.bin"
-pathappend "$HOME/.phpenv/bin" "$HOME/.composer/vendor/bin" "$HOME/.config/composer/vendor/bin"
-
-#######################################################
 # Aliases and Functions
 #######################################################
 
@@ -226,4 +226,3 @@ fi
 if [[ -x "$(command -v phpenv)" ]]; then
   eval "$(phpenv init -)"
 fi
-
