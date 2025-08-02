@@ -4,7 +4,7 @@ if [[ -n "$PS1" && -z "$TMUX" && -n "$SSH_TTY" ]]; then
 fi
 
 # Display Fastfetch in Tmux only once
-if [ -x "$(command -v fastfetch)" -a  -z "$_motd_listed" ]; then
+if [ -x "$(command -v fastfetch)" -a -z "$_motd_listed" ]; then
   case "$TMUX_PANE" in
     %0) fastfetch
         export _motd_listed=yes
@@ -50,31 +50,29 @@ export NVM_COMPLETION=true
 export NVM_AUTO_USE=true
 
 # fzf configuration
-if [[ -x "$(command -v fzf)" ]]; then
-  export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
-    --highlight-line \
-    --info=inline-right \
-    --ansi \
-    --layout=reverse \
-    --border=rounded \
-    --color=bg+:#283457 \
-    --color=bg:#16161e \
-    --color=border:#27a1b9 \
-    --color=fg:#c0caf5 \
-    --color=gutter:#16161e \
-    --color=header:#ff9e64 \
-    --color=hl+:#2ac3de \
-    --color=hl:#2ac3de \
-    --color=info:#545c7e \
-    --color=marker:#ff007c \
-    --color=pointer:#ff007c \
-    --color=prompt:#2ac3de \
-    --color=query:#c0caf5:regular \
-    --color=scrollbar:#27a1b9 \
-    --color=separator:#ff9e64 \
-    --color=spinner:#ff007c \
-  "
-fi
+export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+  --highlight-line \
+  --info=inline-right \
+  --ansi \
+  --layout=reverse \
+  --border=rounded \
+  --color=bg+:#283457 \
+  --color=bg:#16161e \
+  --color=border:#27a1b9 \
+  --color=fg:#c0caf5 \
+  --color=gutter:#16161e \
+  --color=header:#ff9e64 \
+  --color=hl+:#2ac3de \
+  --color=hl:#2ac3de \
+  --color=info:#545c7e \
+  --color=marker:#ff007c \
+  --color=pointer:#ff007c \
+  --color=prompt:#2ac3de \
+  --color=query:#c0caf5:regular \
+  --color=scrollbar:#27a1b9 \
+  --color=separator:#ff9e64 \
+  --color=spinner:#ff007c \
+"
 
 # Sometimes bat is installed as batcat.
 if [[ -x "$(command -v batcat)" ]]; then
@@ -159,7 +157,7 @@ zinit cdreplay -q
 local -r omp_cache=$cache_dir/oh-my-posh-init.zsh
 local -r omp_config=$config_dir/ohmyposh/powerlevel10k.omp.json
 if [[ ! -f $omp_cache || ! -f $omp_config || $omp_config -nt $omp_cache || $(which oh-my-posh) -nt $omp_cache ]]; then
-  mkdir -p ~/.cache
+  mkdir -p $cache_dir
   oh-my-posh init zsh --config $omp_config > $omp_cache
 fi
 source $omp_cache
@@ -213,7 +211,7 @@ fi
 if [[ -x "$(command -v fzf)" ]]; then
   if fzf --zsh &>/dev/null; then
     source <(fzf --zsh)
-  else
+  elif [ -d /usr/share/doc/fzf/examples ]; then
     # Load fzf manually for older versions
     source /usr/share/doc/fzf/examples/key-bindings.zsh
     source /usr/share/doc/fzf/examples/completion.zsh

@@ -1,4 +1,15 @@
 #######################################################
+# Set default variable values
+#######################################################
+
+# If set to true, will not load anything that modifies the ls command or colors
+_SKIP_LS_COLORIZED=false
+
+# eza is a modern color replacement for ls that also has some Git support
+# Link: https://github.com/eza-community/eza
+_SKIP_EZA=false
+
+#######################################################
 # Set the default editor
 # Examples: vim, nvim, emacs, nano, micro, helix, pico,
 # or gui apps like kate, gedit, notepadqq, or vscodium
@@ -29,17 +40,6 @@ if [[ -x "$(command -v code)" ]]; then
 else
   export VISUAL=$EDITOR
 fi
-
-#######################################################
-# Set default variable values
-#######################################################
-
-# If set to true, will not load anything that modifies the ls command or colors
-_SKIP_LS_COLORIZED=false
-
-# eza is a modern color replacement for ls that also has some Git support
-# Link: https://github.com/eza-community/eza
-_SKIP_EZA=false
 
 #######################################################
 # Alias to run the default editor
@@ -93,7 +93,9 @@ if [[ -x "$(command -v lazygit)" ]]; then
 fi
 
 # Create a new tmux session named after the current directory
-alias tn="tmux new -s $(pwd | sed 's/.*\///g')"
+if [[ -x "$(command -v tmux)" ]]; then
+	alias tn="tmux new -s $(pwd | sed 's/.*\///g')"
+fi
 
 #######################################################
 # Systemd Services
@@ -207,14 +209,6 @@ alias ..3='..2; ..'
 alias ..4='..3; ..'
 alias ..5='..4; ..'
 
-# Navigation
-if [[ -d $HOME/Downloads ]]; then
-	alias dl='cd ~/Downloads'
-fi
-if [[ -d /mnt/DevDrive ]]; then
-	alias devdrive='cd /mnt/DevDrive'
-fi
-
 #######################################################
 # Find Files or File Information
 #######################################################
@@ -285,16 +279,34 @@ alias chown='chown --preserve-root'
 alias chmod='chmod --preserve-root'
 alias chgrp='chgrp --preserve-root'
 
-# Make mount command output pretty and human readable format
-alias mount='mount | column -t'
-
 # Display disk space available and show file system type
 alias df="df -Th | grep -Ev '(squashfs)'"
 alias ds="df -Th | grep -Ev '(squashfs|udev|tmpfs)'"
 
 # List block devices but show more info including the files systems and permissions
 # and removes all snap packages from the list
-alias lsb='lsblk --fs --perms --output NAME,LABEL,TYPE,MOUNTPOINTS,FSTYPE,SIZE,FSUSE%,MAJ:MIN,RM,RO,UUID | grep -v \/snap'
+# alias lsb='lsblk --fs --perms --output NAME,LABEL,TYPE,MOUNTPOINTS,FSTYPE,SIZE,FSUSE%,MAJ:MIN,RM,RO,UUID | grep -v \/snap'
+function lsb() {
+	local cols="NAME,LABEL,TYPE"
+
+	# Check for mount point column (MOUNTPOINTS is newer than MOUNTPOINT)
+	if lsblk --help | grep -q "MOUNTPOINTS"; then
+			cols="$cols,MOUNTPOINTS"
+	elif lsblk --help | grep -q "MOUNTPOINT"; then
+			cols="$cols,MOUNTPOINT"
+	fi
+
+	cols="$cols,FSTYPE,SIZE"
+
+	# Check for filesystem usage column
+	if lsblk --help | grep -q "FSUSE%"; then
+			cols="$cols,FSUSE%"
+	fi
+
+	cols="$cols,MAJ:MIN,RM,RO,UUID"
+
+	lsblk --fs --perms --output "$cols" | grep -v '/snap'
+}
 
 # Alias to fuzzy find files in the current folder(s), preview them, and launch in an editor
 # Link: https://github.com/junegunn/fzf
@@ -352,6 +364,24 @@ fi
 #######################################################
 # Networking
 #######################################################
+
+# Flush DNS cache
+# Link: https://www.tecmint.com/flush-dns-cache-in-linux/
+if [[ -x "$(command -v systemd-resolve)" ]]; then
+	alias flushdns='sudo systemd-resolve --flush-caches && echo "DNS cache flushed"'
+elif [[ -x "$(command -v resolvectl)" ]]; then
+	alias flushdns='sudo resolvectl flush-caches && echo "DNS cache flushed"'
+elif [[ -x "$(command -v nscd)" ]]; then
+	alias flushdns='sudo nscd --invalidate=hosts && echo "DNS cache flushed"'
+elif [[ -x "$(command -v dnsmasq)" ]]; then
+	alias flushdns='sudo systemctl restart dnsmasq && echo "DNS cache flushed"'
+elif [[ -x "$(command -v named)" ]]; then
+	alias flushdns='sudo rndc flush && echo "DNS cache flushed"'
+elif [[ -x "$(command -v host)" ]]; then
+	alias flushdns='sudo host -v -c -t txt . && echo "DNS cache flushed"'
+else
+	alias flushdns='echo "No DNS cache flushing command found"'
+fi
 
 # Resume wget by default
 if [[ -x "$(command -v wget)" ]]; then
@@ -437,7 +467,7 @@ alias flushcache="sudo free -h && sudo su -c \"echo 3 >'/proc/sys/vm/drop_caches
 #######################################################
 
 # Time the startup of an interactive shell
-timezsh() {
+timeshell() {
   shell=${1-$SHELL}
   for i in $(seq 1 10); do time $shell -i -c exit; done
 }
@@ -611,11 +641,11 @@ function ytdl() {
         show_help
         return 0
     fi
-    
+
     local url=""
     local audio_only=false
     local extra_args=()
-    
+
     # Parse arguments
     while [[ $# -gt 0 ]]; do
         case "$1" in
@@ -639,14 +669,14 @@ function ytdl() {
                 ;;
         esac
     done
-    
+
     # Validate URL
     if [[ -z "$url" ]]; then
         echo "Error: No URL provided"
         show_help
         return 1
     fi
-    
+
     # Download according to mode
     if [[ "$audio_only" == true ]]; then
         echo "Downloading audio only..."

@@ -26,7 +26,7 @@ This repository contains my personal configuration files and scripts for optimiz
 - [Neovim](https://github.com/neovim/neovim) >= **0.10.0** (needs to be built with **LuaJIT**)
 - Git >= **2.19.0**
 - [LazyVim](https://www.lazyvim.org)
-- a **C** compiler for `nvim-treesitter`. See [here](https://github.com/nvim-treesitter/nvim-treesitter#requirements)
+- a **C** compiler for `nvim-treesitter`. See [requirements](https://github.com/nvim-treesitter/nvim-treesitter#requirements)
 - for [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) **_(optional)_**
   - **find files**: [fd](https://github.com/sharkdp/fd)
 - a terminal that supports true color and _undercurl_: (I use ghostty)
