@@ -8,7 +8,7 @@ This repository contains my personal configuration files and scripts for optimiz
 
 ### Shell (Linux)
 
-- ZSH
+- [ZSH](https://zsh.sourceforge.io)
 - [Zinit](https://github.com/zdharma-continuum/zinit) - Flexible and fast ZSH plugin manager
 - [Oh My Posh](https://ohmyposh.dev) - A prompt theme engine for any shell
 - [Nerd Fonts](https://www.nerdfonts.com) - Patched fonts with glyphs (icons)
@@ -18,7 +18,7 @@ This repository contains my personal configuration files and scripts for optimiz
 
 - Tmux >= **1.9**
 - [Tmux plugin manager](https://github.com/tmux-plugins/tpm) - Installs and loads `tmux` plugins
-- [tokyo-night-tmux](https://github.com/janoamaral/tokyo-night-tmux) - A clean, dark Tmux theme that celebrates the lights of Downtown Tokyo at night.
+- [tokyo-night-tmux](https://github.com/janoamaral/tokyo-night-tmux) - A clean, dark Tmux theme and status bar that celebrates the lights of Downtown Tokyo at night.
 - (disabled) [tmux-powerline](https://github.com/erikw/tmux-powerline) - Status bar consisting of dynamic & beautiful looking powerline segments, written purely in bash
 
 ### Neovim
@@ -29,8 +29,8 @@ This repository contains my personal configuration files and scripts for optimiz
 - a **C** compiler for `nvim-treesitter`. See [requirements](https://github.com/nvim-treesitter/nvim-treesitter#requirements)
 - for [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) **_(optional)_**
   - **find files**: [fd](https://github.com/sharkdp/fd)
-- a terminal that supports true color and _undercurl_: (I use ghostty)
-  - [ghostty](https://github.com/ghostty-org/ghostty) **_(Linux & MacOS)_**
+- a terminal that supports true color and _undercurl_: (I use Ghostty)
+  - [Ghostty](https://github.com/ghostty-org/ghostty) **_(Linux & MacOS)_**
     - [config tool](https://ghostty.zerebos.com)
   - [kitty](https://github.com/kovidgoyal/kitty) **_(Linux & MacOS)_**
   - [wezterm](https://github.com/wez/wezterm) **_(Linux, MacOS & Windows)_**
@@ -38,6 +38,10 @@ This repository contains my personal configuration files and scripts for optimiz
   - [iterm2](https://iterm2.com) **_(MacOS)_**
 
 ### Vim
+
+A `.vimrc` configuration is available for systems where NeoVim is not available.
+
+#### Ultimate Vim Configuration
 
 > [!NOTE]
 > I use this for systems where I haven't updated to Neovim yet
@@ -102,7 +106,7 @@ Install fzf via git
 
 ```shell
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install --no-bash --no-fish --no-update-rc
+~/.fzf/install --no-fish --no-update-rc
 ```
 
 Neovim needs to be installed via the appimage package
@@ -122,11 +126,7 @@ mv nvim-linux-x86_64.appimage ~/.local/bin/nvim
 mv nvim-linux-x86_64.appimage /usr/local/bin/nvim
 ```
 
-`yq` needs to be installed via snap or ppa
-
-```shell
-snap install yq --channel=v3/stable
-```
+`yq` needs to be installed via ppa
 
 ```shell
 sudo add-apt-repository ppa:rmescandon/yq
@@ -134,19 +134,26 @@ sudo apt update
 sudo apt install yq -y
 ```
 
-Install `oh-my-posh` globally using the official install script
+Install `oh-my-posh` using the official install script
+
+Install for all users or for the current user
 
 ```shell
 curl -s https://ohmyposh.dev/install.sh | sudo bash -s -- -d /usr/local/bin
 ```
 
-#### Optional Ubuntu packages
+```shell
+curl -s https://ohmyposh.dev/install.sh | bash -s
+```
+
+#### Optional Ubuntu Packages
 
 ```shell
 sudo apt install bat btop chafa
 ```
 
-`btop` needs to be installed via snap on Ubuntu 22.04 and older
+> [!NOTE]
+> `btop` needs to be installed via snap on Ubuntu 22.04 and older
 
 ```shell
 sudo snap install btop
@@ -161,6 +168,15 @@ echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable
 sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
 sudo apt update
 sudo apt install -y eza
+```
+
+Or manually
+
+```shell
+wget -c https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-gnu.tar.gz -O - | tar xz
+sudo chmod +x eza
+sudo chown root:root eza
+sudo mv eza /usr/local/bin/eza
 ```
 
 `fastfetch` needs to be installed via ppa
@@ -199,7 +215,7 @@ Node Version Manager - POSIX-compliant bash script to manage multiple active nod
 > Node is required for Mason in Nvim, and NVM is how I install Node
 
 ```shell
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 ```
 
 Install default version of node
