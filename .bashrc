@@ -3,10 +3,22 @@
 # for examples
 
 # If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-      *) return;;
-esac
+[[ $- != *i* ]] && return
+
+# Start a tmux session or reattach to an existing session
+if [[ -x "$(command -v tmux)" && -n "$PS1" && -z "$TMUX" && -n "$SSH_TTY" ]]; then
+  (tmux has-session -t $USER && tmux attach-session -t $USER) || tmux new-session -s $USER && exit 0
+fi
+
+# Display Fastfetch in Tmux only once
+if [[ -x "$(command -v fastfetch)" && -z "$_motd_listed" ]]; then
+  case "$TMUX_PANE" in
+    %0) fastfetch
+        export _motd_listed=yes
+        ;;
+    *)  ;;
+  esac
+fi
 
 #######################################################
 # Environment Variables
@@ -172,4 +184,14 @@ if [[ -x "$(command -v fzf)" ]]; then
   fi
 elif [ -f ~/.fzf.bash ]; then
   source ~/.fzf.bash
+fi
+
+# Load nvm (Node Version Manager)
+export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# Initialize phpenv
+if [[ -x "$(command -v phpenv)" ]]; then
+  eval "$(phpenv init -)"
 fi
