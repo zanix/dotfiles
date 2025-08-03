@@ -1,5 +1,5 @@
 # Start a tmux session or reattach to an existing session
-if [[ -n "$PS1" && -z "$TMUX" && -n "$SSH_TTY" ]]; then
+if [[ -x "$(command -v tmux)" && -n "$PS1" && -z "$TMUX" && -n "$SSH_TTY" ]]; then
   (tmux has-session -t $USER && tmux attach-session -t $USER) || tmux new-session -s $USER && exit 0
 fi
 
@@ -98,6 +98,12 @@ export GIT_AUTO_FETCH_INTERVAL=300
 export PYTHON_AUTO_VRUN=true
 export PYTHON_VENV_NAME=".venv"
 
+# ZSH Syntax Highlighting
+if [[ -f ~/.config/zsh/zsh-syntax-highlighting-tokyonight.zsh ]]; then
+  typeset -gA FAST_HIGHLIGHT_STYLES
+  source ~/.config/zsh/zsh-syntax-highlighting-tokyonight.zsh
+fi
+
 #######################################################
 # Add Common Binary Directories to Path
 #######################################################
@@ -136,7 +142,7 @@ pathappend "$HOME/.phpenv/bin" "$HOME/.composer/vendor/bin" "$HOME/.config/compo
 autoload -Uz compinit && compinit
 
 zinit light lukechilds/zsh-nvm
-zinit light zsh-users/zsh-syntax-highlighting
+zinit light zdharma-continuum/fast-syntax-highlighting
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-completions
 zinit light sunlei/zsh-ssh
