@@ -226,6 +226,11 @@ elif [ -f ~/.fzf.zsh ]; then
   source ~/.fzf.zsh
 fi
 
+# Load zoxide
+if [[ -x "$(command -v zoxide)" ]]; then
+  eval "$(zoxide init zsh)"
+fi
+
 # Initialize phpenv
 if [[ -x "$(command -v phpenv)" ]]; then
   eval "$(phpenv init -)"

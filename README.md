@@ -67,6 +67,7 @@ sudo cp ~/dotfiles/my_configs.vim /opt/vim_runtime/
 - [nvm](https://github.com/nvm-sh/nvm) - Node Version Manager - POSIX-compliant bash script to manage multiple active node.js versions
 - [phpenv](https://github.com/phpenv/phpenv) - Simple PHP version management
   - [php-build](https://github.com/php-build/php-build) - Builds PHP so that multiple versions can be used side by side
+- [zoxide](https://github.com/ajeetdsouza/zoxide) - A smarter cd command. Supports all major shells.
 
 ## Requirements
 
