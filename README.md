@@ -76,7 +76,7 @@ Install dependencies on your system.
 ### Arch
 
 ```shell
-sudo pacman -Sy fd fzf git neovim stow wl-clipboard yq zsh
+sudo pacman -Sy fd fzf git neovim stow tmux wl-clipboard yq zsh
 ```
 
 Install `ifstat` and `oh-my-posh` from the AUR
@@ -99,7 +99,7 @@ sudo pacman -Sy bat btop chafa eza fastfetch lazydocker lazygit
 > The `.zshenv` file with the `skip_global_compinit=1` fixes this.
 
 ```shell
-sudo apt install fd-find git ifstat python3-venv stow wl-clipboard zsh
+sudo apt install fd-find git ifstat python3-venv stow tmux wl-clipboard zsh
 ```
 
 Install fzf via git
@@ -126,12 +126,18 @@ mv nvim-linux-x86_64.appimage ~/.local/bin/nvim
 mv nvim-linux-x86_64.appimage /usr/local/bin/nvim
 ```
 
-`yq` needs to be installed via ppa
+(Ubuntu only) `yq` needs to be installed via ppa...
 
 ```shell
 sudo add-apt-repository ppa:rmescandon/yq
 sudo apt update
 sudo apt install yq -y
+```
+
+... (Ubuntu/Debian) or manually
+
+```shell
+wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq && chmod +x /usr/local/bin/yq
 ```
 
 Install `oh-my-posh` using the official install script
@@ -274,6 +280,20 @@ Run `stow` to install the dotfiles.
 ```shell
 stow .
 ```
+
+Set the default shell to ZSH
+
+```shell
+chsh -s $(which zsh)
+```
+
+Change shell now
+
+```shell
+zsh
+```
+
+Or logout, log back in to launch zsh
 
 Dotfiles are now ready to use.
 
