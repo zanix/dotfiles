@@ -126,15 +126,7 @@ mv nvim-linux-x86_64.appimage ~/.local/bin/nvim
 mv nvim-linux-x86_64.appimage /usr/local/bin/nvim
 ```
 
-(Ubuntu only) `yq` needs to be installed via ppa...
-
-```shell
-sudo add-apt-repository ppa:rmescandon/yq
-sudo apt update
-sudo apt install yq -y
-```
-
-... (Ubuntu/Debian) or manually
+`yq` needs to be installed manually
 
 ```shell
 wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq && chmod +x /usr/local/bin/yq
