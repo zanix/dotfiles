@@ -360,13 +360,36 @@ Run `stow` to install the dotfiles.
 stow .
 ```
 
+<details><summary>Global Install</summary>
+
+> [!WARNING]
+> This should be done only with single user systems where the same config is desired for the root user when using sudo su.
+>
+> Cloning this as `root` essentially freezes the config for other users if used.
+
+Clone this repository.
+
+```shell
+git clone https://github.com/zanix/dotfiles.git /opt/dotfiles
+```
+
+Run `stow` to install the dotfiles.
+
+```shell
+stow -d /opt/dotfiles -t /home/username .
+```
+
+----
+
+</details>
+
 Set the default shell to ZSH
 
 ```shell
-chsh -s $(which zsh)
+chsh -s $(which zsh) username
 ```
 
-Change shell now
+Change to ZSH for the current session
 
 ```shell
 zsh
