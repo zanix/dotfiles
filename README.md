@@ -75,6 +75,8 @@ Install dependencies on your system.
 
 ### Arch
 
+<details><summary>Arch Installation</summary>
+
 ```shell
 sudo pacman -Sy fd fzf git neovim stow tmux wl-clipboard yq zsh
 ```
@@ -82,14 +84,18 @@ sudo pacman -Sy fd fzf git neovim stow tmux wl-clipboard yq zsh
 Install `ifstat` and `oh-my-posh` from the AUR
 
 ```shell
-yay ifstat oh-my-posh-bin
+yay ifstat oh-my-posh-bin lazydocker-bin
 ```
 
 #### Optional Arch packages
 
 ```shell
-sudo pacman -Sy bat btop chafa eza fastfetch lazydocker lazygit
+sudo pacman -Sy bat btop chafa eza fastfetch lazygit
 ```
+
+----
+
+</details>
 
 ### Ubuntu/Debian
 
@@ -97,6 +103,8 @@ sudo pacman -Sy bat btop chafa eza fastfetch lazydocker lazygit
 > The default behavior for Zsh in Ubuntu is to initialize `compinit` for every session.
 > This causes the prompt to load very slowly unless it is disabled.
 > The `.zshenv` file with the `skip_global_compinit=1` fixes this.
+
+<details><summary>Ubuntu Installation</summary>
 
 ```shell
 sudo apt install fd-find git ifstat python3-venv stow tmux wl-clipboard zsh
@@ -107,29 +115,6 @@ Install fzf via git
 ```shell
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install --no-fish --no-update-rc
-```
-
-Neovim needs to be installed via the appimage package
-
-```shell
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
-chmod u+x nvim-linux-x86_64.appimage
-```
-
-Install for all users or for the current user
-
-```shell
-mv nvim-linux-x86_64.appimage ~/.local/bin/nvim
-```
-
-```shell
-mv nvim-linux-x86_64.appimage /usr/local/bin/nvim
-```
-
-`yq` needs to be installed manually
-
-```shell
-wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq && chmod +x /usr/local/bin/yq
 ```
 
 Install `oh-my-posh` using the official install script
@@ -144,7 +129,55 @@ curl -s https://ohmyposh.dev/install.sh | sudo bash -s -- -d /usr/local/bin
 curl -s https://ohmyposh.dev/install.sh | bash -s
 ```
 
-#### Optional Ubuntu Packages
+Neovim needs to be installed via the appimage package
+
+<details><summary>AMD64</summary>
+
+```shell
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
+chmod u+x nvim-linux-x86_64.appimage
+```
+
+</details>
+
+<details><summary>ARM64</summary>
+
+```shell
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-arm64.appimage
+chmod u+x nvim-linux-arm64.appimage
+```
+
+</details>
+
+Install for all users or for the current user
+
+```shell
+mv nvim-linux-x86_64.appimage ~/.local/bin/nvim
+```
+
+```shell
+mv nvim-linux-x86_64.appimage /usr/local/bin/nvim
+```
+
+`yq` needs to be installed manually
+
+<details><summary>AMD64</summary>
+
+```shell
+wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq && chmod +x /usr/local/bin/yq
+```
+
+</details>
+
+<details><summary>ARM64</summary>
+
+```shell
+wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_arm64 -O /usr/local/bin/yq && chmod +x /usr/local/bin/yq
+```
+
+</details>
+
+#### Optional Ubuntu AMD64 Packages
 
 ```shell
 sudo apt install bat btop chafa
@@ -170,12 +203,27 @@ sudo apt install -y eza
 
 Or manually
 
+<details><summary>AMD64</summary>
+
 ```shell
 wget -c https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-gnu.tar.gz -O - | tar xz
 sudo chmod +x eza
 sudo chown root:root eza
 sudo mv eza /usr/local/bin/eza
 ```
+
+</details>
+
+<details><summary>ARM64</summary>
+
+```shell
+wget -c https://github.com/eza-community/eza/releases/latest/download/eza_aarch64-unknown-linux-gnu.zip -O - | tar xz
+sudo chmod +x eza
+sudo chown root:root eza
+sudo mv eza /usr/local/bin/eza
+```
+
+</details>
 
 `fastfetch` needs to be installed via ppa
 
@@ -187,6 +235,26 @@ add-apt-repository -y ppa:zhangsongcui3371/fastfetch
 sudo apt install fastfetch
 ```
 
+Or Manually
+
+<details><summary>AMD64</summary>
+
+```shell
+wget https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-amd64.deb
+sudo dpkg -l fastfetch-linux-amd64.deb
+```
+
+</details>
+
+<details><summary>ARM64</summary>
+
+```shell
+wget https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-aarch64.deb
+sudo dpkg -l fastfetch-linux-aarch64.deb
+```
+
+</details>
+
 `lazydocker` needs to be installed manually
 
 ```shell
@@ -196,12 +264,31 @@ curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/i
 
 `lazygit` needs to be installed manually
 
+<details><summary>AMD64</summary>
+
 ```shell
 LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
 curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
 tar xf lazygit.tar.gz lazygit
 sudo install lazygit -D -t /usr/local/bin/
 ```
+
+</details>
+
+<details><summary>ARM64</summary>
+
+```shell
+LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
+curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_linux_arm64.tar.gz"
+tar xf lazygit.tar.gz lazygit
+sudo install lazygit -D -t /usr/local/bin/
+```
+
+</details>
+
+----
+
+</details>
 
 ### Other Software
 
