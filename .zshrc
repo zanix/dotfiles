@@ -228,6 +228,7 @@ fi
 
 # Load zoxide
 if [[ -x "$(command -v zoxide)" ]]; then
+  unalias zi
   eval "$(zoxide init zsh)"
 fi
 

@@ -78,7 +78,7 @@ Install dependencies on your system.
 <details><summary>Arch Installation</summary>
 
 ```shell
-sudo pacman -Sy fd fzf git neovim stow tmux wl-clipboard yq zsh
+sudo pacman -Sy fd fzf git neovim stow tmux wl-clipboard yq zoxide zsh
 ```
 
 Install `ifstat` and `oh-my-posh` from the AUR
@@ -107,7 +107,7 @@ sudo pacman -Sy bat btop chafa eza fastfetch lazygit
 <details><summary>Ubuntu Installation</summary>
 
 ```shell
-sudo apt install fd-find git ifstat python3-venv stow tmux wl-clipboard zsh
+sudo apt install fd-find git ifstat python3-venv stow tmux wl-clipboard zoxide zsh
 ```
 
 Install fzf via git
