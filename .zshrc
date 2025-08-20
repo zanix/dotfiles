@@ -45,7 +45,7 @@ local -r cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}
 local -r config_dir=${XDG_CONFIG_HOME:-$HOME/.config}
 
 # Lazy load NVM
-export NVM_LAZY_LOAD=true
+export NVM_LAZY_LOAD=false  # Needs to be false for Nvim
 export NVM_COMPLETION=true
 export NVM_AUTO_USE=true
 
