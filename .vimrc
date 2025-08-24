@@ -76,6 +76,7 @@ syntax on                       " enable syntax highlighting
 set background=dark             " shell is usally dark
 
 set number                      " show line numbers
+set relativenumber              " show relative line numbers
 set ruler                       " show the cursor position
 set lazyredraw                  " don't update the display while executing macros
 set encoding=utf8               " set utf8 as standard encoding
