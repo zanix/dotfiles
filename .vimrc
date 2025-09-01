@@ -82,7 +82,10 @@ set lazyredraw                  " don't update the display while executing macro
 set encoding=utf8               " set utf8 as standard encoding
 set termencoding=utf-8          " set terminal encoding to utf8
 set laststatus=2                " always show a status line in, even if there is only one window
-" set cmdheight=1                 " use a status bar that is 1 rows high
+set cmdheight=1                 " use a status bar that is 1 rows high
+
+" format the status line
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
 
 set ffs=unix,dos,mac            " use Unix as the standard file type
 
