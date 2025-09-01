@@ -40,22 +40,6 @@ This repository contains my personal configuration files and scripts for optimiz
 
 A `.vimrc` configuration is available for systems where NeoVim is not available.
 
-#### Ultimate Vim Configuration
-
-> [!NOTE]
-> I use this for systems where I haven't updated to Neovim yet
-
-I use the [Ultimate Vim Configuration](https://github.com/amix/vimrc) for a quick and decent setup
-
-> [!IMPORTANT]
-> I use the [Install for multiple users](https://github.com/amix/vimrc#install-for-multiple-users) option
-
-After setting this up, it automatically places a `.vimrc` file into my profile. Then I copy my custom config into the `vim_runtime` directory.
-
-```shell
-sudo cp ~/dotfiles/my_configs.vim /opt/vim_runtime/
-```
-
 ### Others
 
 - [bat](https://github.com/sharkdp/bat) - A cat(1) clone with wings
