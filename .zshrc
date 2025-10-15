@@ -1,11 +1,14 @@
+# ZSH Configuration
+# shellcheck disable=SC1091,SC2148,SC2312
+
 # Start a tmux session or reattach to an existing session
-if [[ -x "$(command -v tmux)" && -n "$PS1" && -z "$TMUX" && -n "$SSH_TTY" ]]; then
-  (tmux has-session -t $USER && tmux attach-session -t $USER) || tmux new-session -s $USER && exit 0
+if [[ -x "$(command -v tmux)" && -n "${PS1}" && -z "${TMUX}" && -n "${SSH_TTY}" ]]; then
+  (tmux has-session -t "${USER}" && tmux attach-session -t "${USER}") || tmux new-session -s "${USER}" && exit 0
 fi
 
 # Display Fastfetch in Tmux only once
-if [ -x "$(command -v fastfetch)" -a -z "$_motd_listed" ]; then
-  case "$TMUX_PANE" in
+if [[ -x "$(command -v fastfetch)" && -z "${_motd_listed}" ]]; then
+  case "${TMUX_PANE}" in
     %0) fastfetch
         export _motd_listed=yes
         ;;
@@ -21,9 +24,9 @@ fi
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
 # Download Zinit, if it's not installed yet
-if [ ! -d "$ZINIT_HOME" ]; then
-  mkdir -p "$(dirname $ZINIT_HOME)"
-  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+if [[ ! -d "${ZINIT_HOME}" ]]; then
+  mkdir -p "$(dirname ${ZINIT_HOME})"
+  git clone https://github.com/zdharma-continuum/zinit.git "${ZINIT_HOME}"
 fi
 
 # Source/Load zinit
@@ -41,8 +44,8 @@ zinit ice depth=1; zinit load "kytta/ohmyzsh-key-bindings"
 #######################################################
 
 # Set directories
-local -r cache_dir=${XDG_CACHE_HOME:-$HOME/.cache}
-local -r config_dir=${XDG_CONFIG_HOME:-$HOME/.config}
+cache_dir=${XDG_CACHE_HOME:-${HOME}/.cache}
+config_dir=${XDG_CONFIG_HOME:-${HOME}/.config}
 
 # Lazy load NVM
 export NVM_LAZY_LOAD=false  # Needs to be false for Nvim
@@ -50,7 +53,7 @@ export NVM_COMPLETION=true
 export NVM_AUTO_USE=true
 
 # fzf configuration
-export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} \
   --highlight-line \
   --info=inline-right \
   --ansi \
@@ -82,13 +85,12 @@ elif [[ -x "$(command -v bat)" ]]; then
 fi
 
 # Tokyonight color scheme for bat
-if [[ ! -z ${batname+x} ]]; then
+if [[ -n ${batname+x} ]]; then
   # Generate the cache directory if it does not exist
-  if [ ! -d "$($batname --cache-dir)" ]; then
-    $batname cache --build
+  if [[ ! -f "$(${batname} --cache-dir)/themes.bin" ]]; then
+    ${batname} cache --build
   fi
-  export BAT_THEME="tokyonight_night"
-  export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | $batname -p -lman'"
+  export MANPAGER="sh -c 'sed -u -e \"s/\\x1B\[[0-9;]*m//g; s/.\\x08//g\" | ${batname} -p -lman'"
 fi
 
 # Configure git-auto-fetch options
@@ -99,9 +101,9 @@ export PYTHON_AUTO_VRUN=true
 export PYTHON_VENV_NAME=".venv"
 
 # ZSH Syntax Highlighting
-if [[ -f ~/.config/zsh/zsh-syntax-highlighting-tokyonight.zsh ]]; then
+if [[ -f "${HOME}/.config/zsh/zsh-syntax-highlighting-tokyonight.zsh" ]]; then
   typeset -gA FAST_HIGHLIGHT_STYLES
-  source ~/.config/zsh/zsh-syntax-highlighting-tokyonight.zsh
+  source "${HOME}/.config/zsh/zsh-syntax-highlighting-tokyonight.zsh"
 fi
 
 #######################################################
@@ -113,8 +115,8 @@ fi
 function pathappend() {
   for ARG in "$@"
   do
-    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
-      PATH="${PATH:+"$PATH:"}$ARG"
+    if [[ -d "${ARG}" ]] && [[ ":${PATH}:" != *":${ARG}:"* ]]; then
+      PATH="${PATH:+"${PATH}:"}${ARG}"
     fi
   done
 }
@@ -123,16 +125,16 @@ function pathappend() {
 function pathprepend() {
   for ARG in "$@"
   do
-    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
-      PATH="$ARG${PATH:+":$PATH"}"
+    if [[ -d "${ARG}" ]] && [[ ":${PATH}:" != *":${ARG}:"* ]]; then
+      PATH="${ARG}${PATH:+":${PATH}"}"
     fi
   done
 }
 
 # Add the most common personal binary paths located inside the home folder
 # (directories are only added if they exist)
-pathprepend "$HOME/bin" "$HOME/sbin" "$HOME/.local/bin" "$HOME/local/bin" "$HOME/.bin"
-pathappend "$HOME/.phpenv/bin" "$HOME/.composer/vendor/bin" "$HOME/.config/composer/vendor/bin"
+pathprepend "${HOME}/bin" "${HOME}/sbin" "${HOME}/.local/bin" "${HOME}/local/bin" "${HOME}/.bin"
+pathappend "${HOME}/.phpenv/bin" "${HOME}/.composer/vendor/bin" "${HOME}/.config/composer/vendor/bin"
 
 #######################################################
 # Plugins
@@ -160,13 +162,13 @@ zinit snippet OMZP::python
 zinit cdreplay -q
 
 # Cache oh-my-posh init to avoid recomputation
-local -r omp_cache=$cache_dir/oh-my-posh-init.zsh
-local -r omp_config=$config_dir/ohmyposh/powerlevel10k.omp.json
-if [[ ! -f $omp_cache || ! -f $omp_config || $omp_config -nt $omp_cache || $(which oh-my-posh) -nt $omp_cache ]]; then
-  mkdir -p $cache_dir
-  oh-my-posh init zsh --config $omp_config > $omp_cache
+omp_cache=${cache_dir}/oh-my-posh-init.zsh
+omp_config=${config_dir}/ohmyposh/powerlevel10k.omp.json
+if [[ ! -f ${omp_cache} || ! -f ${omp_config} || ${omp_config} -nt ${omp_cache} || $(command -v oh-my-posh) -nt ${omp_cache} ]]; then
+  mkdir -p "${cache_dir}"
+  oh-my-posh init zsh --config "${omp_config}" > "${omp_cache}"
 fi
-source $omp_cache
+source "${omp_cache}"
 
 #######################################################
 # Plugin Configuration
@@ -174,7 +176,7 @@ source $omp_cache
 
 # Completion styling
 # zstyle ':completion:*' use-cache true
-# zstyle ':completion:*' cache-path $cache_dir/zsh/.zcompcache
+# zstyle ':completion:*' cache-path ${cache_dir}/zsh/.zcompcache
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 if [[ -x "$(command -v fzf)" ]]; then
@@ -190,8 +192,8 @@ fi
 #######################################################
 
 HISTSIZE=10000
-HISTFILE=~/.zsh_history
-SAVEHIST=$HISTSIZE
+HISTFILE="${HOME}/.zsh_history"
+SAVEHIST=${HISTSIZE}
 HISTDUP=erase
 setopt appendhistory
 setopt sharehistory
@@ -205,8 +207,8 @@ setopt hist_find_no_dups
 # Aliases and Functions
 #######################################################
 
-if [[ -f ~/.zsh_aliases ]]; then
-  source ~/.zsh_aliases
+if [[ -f "${HOME}/.zsh_aliases" ]]; then
+  source "${HOME}/.zsh_aliases"
 fi
 
 #######################################################
@@ -217,13 +219,13 @@ fi
 if [[ -x "$(command -v fzf)" ]]; then
   if fzf --zsh &>/dev/null; then
     source <(fzf --zsh)
-  elif [ -d /usr/share/doc/fzf/examples ]; then
+  elif [[ -d /usr/share/doc/fzf/examples ]]; then
     # Load fzf manually for older versions
     source /usr/share/doc/fzf/examples/key-bindings.zsh
     source /usr/share/doc/fzf/examples/completion.zsh
   fi
-elif [ -f ~/.fzf.zsh ]; then
-  source ~/.fzf.zsh
+elif [[ -f "${HOME}/.fzf.zsh" ]]; then
+  source "${HOME}/.fzf.zsh"
 fi
 
 # Load zoxide

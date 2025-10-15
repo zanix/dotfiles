@@ -1,18 +1,19 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
+# shellcheck disable=SC1091,SC2148,SC2312
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
 # Start a tmux session or reattach to an existing session
-if [[ -x "$(command -v tmux)" && -n "$PS1" && -z "$TMUX" && -n "$SSH_TTY" ]]; then
-  (tmux has-session -t $USER && tmux attach-session -t $USER) || tmux new-session -s $USER && exit 0
+if [[ -x "$(command -v tmux)" && -n "${PS1}" && -z "${TMUX}" && -n "${SSH_TTY}" ]]; then
+  (tmux has-session -t "${USER}" && tmux attach-session -t "${USER}") || tmux new-session -s "${USER}" && exit 0
 fi
 
 # Display Fastfetch in Tmux only once
-if [[ -x "$(command -v fastfetch)" && -z "$_motd_listed" ]]; then
-  case "$TMUX_PANE" in
+if [[ -x "$(command -v fastfetch)" && -z "${_motd_listed}" ]]; then
+  case "${TMUX_PANE}" in
     %0) fastfetch
         export _motd_listed=yes
         ;;
@@ -25,7 +26,7 @@ fi
 #######################################################
 
 # fzf configuration
-export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} \
   --highlight-line \
   --info=inline-right \
   --ansi \
@@ -65,8 +66,8 @@ fi
 function pathappend() {
   for ARG in "$@"
   do
-    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
-      PATH="${PATH:+"$PATH:"}$ARG"
+    if [[ -d "${ARG}" ]] && [[ ":${PATH}:" != *":${ARG}:"* ]]; then
+      PATH="${PATH:+"${PATH}:"}${ARG}"
     fi
   done
 }
@@ -75,16 +76,16 @@ function pathappend() {
 function pathprepend() {
   for ARG in "$@"
   do
-    if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
-      PATH="$ARG${PATH:+":$PATH"}"
+    if [[ -d "${ARG}" ]] && [[ ":${PATH}:" != *":${ARG}:"* ]]; then
+      PATH="${ARG}${PATH:+":${PATH}"}"
     fi
   done
 }
 
 # Add the most common personal binary paths located inside the home folder
 # (directories are only added if they exist)
-pathprepend "$HOME/bin" "$HOME/sbin" "$HOME/.local/bin" "$HOME/local/bin" "$HOME/.bin"
-pathappend "$HOME/.composer/vendor/bin" "$HOME/.config/composer/vendor/bin"
+pathprepend "${HOME}/bin" "${HOME}/sbin" "${HOME}/.local/bin" "${HOME}/local/bin" "${HOME}/.bin"
+pathappend "${HOME}/.phpenv/bin" "${HOME}/.composer/vendor/bin" "${HOME}/.config/composer/vendor/bin"
 
 #######################################################
 # History
@@ -117,10 +118,10 @@ case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
 esac
 
-if [ "$color_prompt" = yes ]; then
+if [[ "${color_prompt}" = yes ]]; then
     prompt_symbol='\[\e[0m\]󰹻'
     user_color='\[\e[92;1m\]'
-    if [ "$EUID" -eq 0 ]; then
+    if [[ "${EUID}" -eq 0 ]]; then
         prompt_symbol='\[\e[0;93m\]󱐋'
         user_color='\[\e[91;1m\]'
     fi
@@ -135,16 +136,16 @@ fi
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
-case "$TERM" in
+case "${TERM}" in
 xterm*|rxvt*)
-    PS1="\[\e]0;\u@\h: \w\a\]$PS1"
+    PS1="\[\e]0;\u@\h: \w\a\]${PS1}"
     ;;
 *)
     ;;
 esac
 
 # Add current directory to prompt for Tabby
-export PS1="$PS1\[\e]1337;CurrentDir="'$(pwd)\a\]'
+export PS1="${PS1}\[\e]1337;CurrentDir="'$(pwd)\a\]'
 
 #######################################################
 # Completion
@@ -154,9 +155,9 @@ export PS1="$PS1\[\e]1337;CurrentDir="'$(pwd)\a\]'
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
+  if [[ -f /usr/share/bash-completion/bash_completion ]]; then
     . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
+  elif [[ -f /etc/bash_completion ]]; then
     . /etc/bash_completion
   fi
 fi
@@ -165,8 +166,8 @@ fi
 # Aliases and Functions
 #######################################################
 
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+if [[ -f "${HOME}/.bash_aliases" ]]; then
+    . "${HOME}/.bash_aliases"
 fi
 
 #######################################################
@@ -177,19 +178,19 @@ fi
 if [[ -x "$(command -v fzf)" ]]; then
   if fzf --bash &>/dev/null; then
     source <(fzf --bash)
-  elif [ -d /usr/share/doc/fzf/examples ]; then
+  elif [[ -d /usr/share/doc/fzf/examples ]]; then
     # Load fzf manually for older versions
     source /usr/share/doc/fzf/examples/key-bindings.bash
     source /usr/share/doc/fzf/examples/completion.bash
   fi
-elif [ -f ~/.fzf.bash ]; then
-  source ~/.fzf.bash
+elif [[ -f "${HOME}/.fzf.bash" ]]; then
+  source "${HOME}/.fzf.bash"
 fi
 
 # Load nvm (Node Version Manager)
-export NVM_DIR="$HOME/.nvm"
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export NVM_DIR="${HOME}/.nvm"
+  [[ -s "${NVM_DIR}/nvm.sh" ]] && \. "${NVM_DIR}/nvm.sh"  # This loads nvm
+  [[ -s "${NVM_DIR}/bash_completion" ]] && \. "${NVM_DIR}/bash_completion"  # This loads nvm bash_completion
 
 # Load zoxide
 if [[ -x "$(command -v zoxide)" ]]; then

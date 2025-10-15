@@ -1,3 +1,6 @@
+# ZSH Aliases
+# shellcheck disable=SC2148,SC2312
+
 #######################################################
 # Set default variable values
 #######################################################
@@ -38,7 +41,7 @@ fi
 if [[ -x "$(command -v code)" ]]; then
   export VISUAL=code
 else
-  export VISUAL=$EDITOR
+  export VISUAL=${EDITOR}
 fi
 
 #######################################################
@@ -83,14 +86,24 @@ alias e="edit"
 alias zshrc='${=EDITOR} ${ZDOTDIR:-$HOME}/.zshrc'
 
 #######################################################
-# Generic Aliases
+# Git Aliases
 #######################################################
+
+# Set the default git editor to the default editor
+export GIT_EDITOR=${EDITOR}
 
 # LazyGit - Terminal UI for git commands
 # Link: https://github.com/jesseduffield/lazygit
 if [[ -x "$(command -v lazygit)" ]]; then
 	alias lg='lazygit'
 fi
+
+# Pretty git log output
+alias glog="git log --pretty=\"%C(Yellow)%h %C(reset)%ad (%C(Green)%cr%C(reset)) %C(Cyan)%an%x09: %C(reset)%s\" --date=format:%Y-%m-%d\ %H:%M:%S"
+
+#######################################################
+# Generic Aliases
+#######################################################
 
 # Create a new tmux session named after the current directory
 if [[ -x "$(command -v tmux)" ]]; then
@@ -118,11 +131,11 @@ fi
 #######################################################
 
 # Aliases for multiple directory listing commands
-if [[ $_SKIP_LS_COLORIZED = false ]]; then
+if [[ ${_SKIP_LS_COLORIZED} = false ]]; then
 
 	# If eza is installed...
 	# Link: https://github.com/eza-community/eza
-	if [[ $_SKIP_EZA = false ]] && [[ -x "$(command -v eza)" ]]; then
+	if [[ ${_SKIP_EZA} = false ]] && [[ -x "$(command -v eza)" ]]; then
 		# Add icons to eza if unicode and the icon paramter is supported
 		if [[ $(locale charmap) == 'UTF-8' ]]; then
 			(\eza --help | grep -q -e "--icons" &> /dev/null) && alias eza='eza --icons=always'
@@ -291,26 +304,26 @@ function lsb() {
 
 	# Check for mount point column (MOUNTPOINTS is newer than MOUNTPOINT)
 	if lsblk --help | grep -q "MOUNTPOINTS"; then
-			cols="$cols,MOUNTPOINTS"
+			cols="${cols},MOUNTPOINTS"
 	elif lsblk --help | grep -q "MOUNTPOINT"; then
-			cols="$cols,MOUNTPOINT"
+			cols="${cols},MOUNTPOINT"
 	fi
 
-	cols="$cols,FSTYPE,SIZE"
+	cols="${cols},FSTYPE,SIZE"
 
 	# Check for filesystem usage column
 	if lsblk --help | grep -q "FSUSE%"; then
-			cols="$cols,FSUSE%"
+			cols="${cols},FSUSE%"
 	fi
 
-	cols="$cols,MAJ:MIN,RM,RO,UUID"
+	cols="${cols},MAJ:MIN,RM,RO,UUID"
 
-	lsblk --fs --perms --output "$cols" | grep -v '/snap'
+	lsblk --fs --perms --output "${cols}" | grep -v '/snap'
 }
 
 # Alias to fuzzy find files in the current folder(s), preview them, and launch in an editor
 # Link: https://github.com/junegunn/fzf
-if [[ -x "$(command -v fzf)" ]] && [[ ! -z ${batname+x} ]]; then
+if [[ -x "$(command -v fzf)" ]] && [[ -n ${batname+x} ]]; then
 	if [[ -x "$(command -v fzf-preview.sh)" ]] && [[ -x "$(command -v chafa)" ]]; then
   	alias fzf='fzf --preview "fzf-preview.sh {}"'
 	else
@@ -444,7 +457,7 @@ alias c='clear'
 
 # Alias For bat
 # Link: https://github.com/sharkdp/bat
-if [[ ! -z ${batname+x} ]]; then
+if [[ -n ${batname+x} ]]; then
   alias cat='${batname}'
 fi
 
@@ -468,37 +481,37 @@ alias flushcache="sudo free -h && sudo su -c \"echo 3 >'/proc/sys/vm/drop_caches
 
 # Time the startup of an interactive shell
 timeshell() {
-  shell=${1-$SHELL}
-  for i in $(seq 1 10); do time $shell -i -c exit; done
+  shell=${1-${SHELL}}
+  for i in $(seq 1 10); do time ${shell} -i -c exit; done
 }
 
 # Extracts any archive(s)
 function extract() {
 	for archive; do
-		if [ -f "$archive" ] ; then
-			case "$archive" in
+		if [[ -f "${archive}" ]] ; then
+			case "${archive}" in
 				*.cbt|*.tar.bz2|*.tar.gz|*.tar.xz|*.tbz2|*.tgz|*.txz|*.tar)
-										  tar xvf "$archive"       ;;
-				*.lzma)       unlzma ./"$archive"      ;;
-				*.bz2)        bunzip2 ./"$archive"     ;;
+										  tar xvf "${archive}"       ;;
+				*.lzma)       unlzma ./"${archive}"      ;;
+				*.bz2)        bunzip2 ./"${archive}"     ;;
 				*.cbr|*.rar)
-										  unrar x -ad ./"$archive" ;;
-				*.gz)         gunzip ./"$archive"      ;;
+										  unrar x -ad ./"${archive}" ;;
+				*.gz)         gunzip ./"${archive}"      ;;
 				*.cbz|*.epub|*.zip)
-				              unzip ./"$archive"       ;;
-				*.z)          uncompress ./"$archive"  ;;
+				              unzip ./"${archive}"       ;;
+				*.z)          uncompress ./"${archive}"  ;;
 				*.7z|*.arj|*.cab|*.cb7|*.chm|*.deb|*.dmg|*.iso|*.lzh|*.msi|*.pkg|*.rpm|*.udf|*.wim|*.xar)
-										  7z x ./"$archive"        ;;
-				*.xz)         unxz ./"$archive"        ;;
-				*.exe)        cabextract ./"$archive"  ;;
-				*.cpio)       cpio -id < ./"$archive"  ;;
-				*.cba|*.ace)  unace x ./"$archive"     ;;
-				*)          	echo "don't know how to extract '$archive'..."
+										  7z x ./"${archive}"        ;;
+				*.xz)         unxz ./"${archive}"        ;;
+				*.exe)        cabextract ./"${archive}"  ;;
+				*.cpio)       cpio -id < ./"${archive}"  ;;
+				*.cba|*.ace)  unace x ./"${archive}"     ;;
+				*)          	echo "don't know how to extract '${archive}'..."
                       return 1
 											;;
 			esac
 		else
-			echo "'$archive' does not exist!"
+			echo "'${archive}' does not exist!"
 		fi
 	done
 }
@@ -531,7 +544,7 @@ function findtext() {
 		# -n causes line number to be printed
 		# optional: -F treat search term as a literal, not a regular expression
 		# optional: -l only print filenames and not the matching lines ex. grep -irl "$@" *
-		grep -iIHrn --color=always "${@}" . | $PAGER -r
+		grep -iIHrn --color=always "${@}" . | ${PAGER} -r
 	fi
 }
 
@@ -659,7 +672,7 @@ function ytdl() {
                 ;;
             *)
                 # First non-flag argument is treated as URL
-                if [[ -z "$url" ]]; then
+                if [[ -z "${url}" ]]; then
                     url="$1"
                 else
                     # All other arguments go to yt-dlp
@@ -671,19 +684,19 @@ function ytdl() {
     done
 
     # Validate URL
-    if [[ -z "$url" ]]; then
+    if [[ -z "${url}" ]]; then
         echo "Error: No URL provided"
         show_help
         return 1
     fi
 
     # Download according to mode
-    if [[ "$audio_only" == true ]]; then
+    if [[ "${audio_only}" == true ]]; then
         echo "Downloading audio only..."
-        yt-dlp "$url" "${extra_args[@]}" --windows-filenames --embed-thumbnail --embed-subs --audio-quality 0 --extract-audio --audio-format mp3
+        yt-dlp "${url}" "${extra_args[@]}" --windows-filenames --embed-thumbnail --embed-subs --audio-quality 0 --extract-audio --audio-format mp3
     else
         echo "Downloading video..."
-        yt-dlp "$url" "${extra_args[@]}" --windows-filenames --sponsorblock-mark all --embed-thumbnail --embed-subs -f bestvideo+bestaudio --embed-chapters --remux-video mkv
+        yt-dlp "${url}" "${extra_args[@]}" --windows-filenames --sponsorblock-mark all --embed-thumbnail --embed-subs -f bestvideo+bestaudio --embed-chapters --remux-video mkv
     fi
 }
 
@@ -691,9 +704,11 @@ function ytdl() {
 # Searching command history
 #######################################################
 
-# Search command line history and fix zsh annoying behavior
+# Fix zsh annoying behavior
 alias history='history 1'
-h() { if [ -z "$*" ]; then history; else history | grep "$@"; fi; }
+
+# Search command line history
+h() { if [[ -z "$*" ]]; then history; else history | grep "$@"; fi; }
 
 #######################################################
 # Settings and Exports
@@ -714,7 +729,7 @@ if [[ -x "$(command -v moar)" ]]; then
 	# https://github.com/walles/moar
 	export PAGER=moar
 	alias less='moar'
-elif [[ -n "$LESSOPEN" ]]; then
+elif [[ -n "${LESSOPEN}" ]]; then
 	# Use less over most if it has syntax highlighting
 	export PAGER=less
 	alias less='less --LINE-NUMBERS'
@@ -738,4 +753,4 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
 # Make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+[[ -x /usr/bin/lesspipe ]] && eval "$(SHELL=/bin/sh lesspipe)"
