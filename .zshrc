@@ -1,5 +1,5 @@
 # ZSH Configuration
-# shellcheck disable=SC1091,SC2148,SC2312
+# shellcheck disable=SC1091,SC2148,SC2154,SC2312
 
 # Start a tmux session or reattach to an existing session
 if [[ -x "$(command -v tmux)" && -n "${PS1}" && -z "${TMUX}" && -n "${SSH_TTY}" ]]; then

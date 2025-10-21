@@ -114,6 +114,9 @@ fi
 # Systemd Services
 #######################################################
 
+# Restart PipeWire services
+alias pwrestart='systemctl --user restart pipewire.socket pipewire.service pipewire-pulse.service'
+
 if [[ -x "$(command -v systemctl)" ]]; then
 	# Get a list of all services
 	alias services='systemctl list-units --type=service --state=running,failed'
@@ -135,6 +138,7 @@ if [[ ${_SKIP_LS_COLORIZED} = false ]]; then
 
 	# If eza is installed...
 	# Link: https://github.com/eza-community/eza
+	# shellcheck disable=SC2142
 	if [[ ${_SKIP_EZA} = false ]] && [[ -x "$(command -v eza)" ]]; then
 		# Add icons to eza if unicode and the icon paramter is supported
 		if [[ $(locale charmap) == 'UTF-8' ]]; then
@@ -162,46 +166,47 @@ if [[ ${_SKIP_LS_COLORIZED} = false ]]; then
 	# Use ls with command line options
 	else
 		alias ls='ls -Fh --color=always --group-directories-first'
-		alias ll='ls -FAls'                   # long listing
-		alias labc='ls -lAp'                  # sort alphabetically
-		alias lx='ll -lAXBh'                  # sort by extension
-		alias lk='ll -lASrh'                  # sort by size
-		alias lt='ll -lAtrh'                  # sort by date
-		alias lc='ll -lAcrh'                  # sort by change time
-		alias lu='ll -lAurh'                  # sort by access time
-		alias new='ls -lAtr | tail -10 | tac' # list recently created/updated files
-		alias lw='ls -xAh'                    # wide listing format
-		alias lm='ll -Alh | \less -S'         # pipe through less
-		alias lr='ls -lRh'                    # recursive ls
-		alias l.='ll -d .*'                   # show hidden files
+		alias ll='ls -FAls'                       # long listing
+		alias labc='ls -lAp'                      # sort alphabetically
+		alias lx='ll -lAXBh'                      # sort by extension
+		alias lk='ll -lASrh'                      # sort by size
+		alias lt='ll -lAtrh'                      # sort by date
+		alias lc='ll -lAcrh'                      # sort by change time
+		alias lu='ll -lAurh'                      # sort by access time
+		alias new='ls -lAtr | tail -10 | tac'     # list recently created/updated files
+		alias lw='ls -xAh'                        # wide listing format
+		alias lm='ll -Alh | \less -S'             # pipe through less
+		alias lr='ls -lRh'                        # recursive ls
+		alias l.='ll -d .*'                       # show hidden files
 		alias la='ls -lAit --time-style=full-iso' # long listing with inode and group
-		alias lfile="ls -lA | egrep -v '^d'"  # files only
-		alias ldir="ls -lA | egrep '^d'"      # directories only
-		alias ltree='\tree -CAhF --dirsfirst' # tree view
+		alias lfile="ls -lA | egrep -v '^d'"      # files only
+		alias ldir="ls -lA | egrep '^d'"          # directories only
+		alias ltree='\tree -CAhF --dirsfirst'     # tree view
 
 	fi
 else
 	alias ls='ls -Fh --group-directories-first'
-	alias ll='ls -FAls'                   # long listing
-	alias labc='ls -lap'                  # sort alphabetically
-	alias lx='ll -laXBh'                  # sort by extension
-	alias lk='ll -laSrh'                  # sort by size
-	alias lt='ll -latrh'                  # sort by date
-	alias lc='ll -lacrh'                  # sort by change time
-	alias lu='ll -laurh'                  # sort by access time
-	alias new='ls -latr | tail -10 | tac' # list recently created/updated files
-	alias lw='ls -xAh'                    # wide listing format
-	alias lm='ll -Alh | \less -S'         # pipe through less
-	alias lr='ls -lRh'                    # recursive ls
-	alias l.='ll -d .*'                   # show hidden files
+	alias ll='ls -FAls'                       # long listing
+	alias labc='ls -lap'                      # sort alphabetically
+	alias lx='ll -laXBh'                      # sort by extension
+	alias lk='ll -laSrh'                      # sort by size
+	alias lt='ll -latrh'                      # sort by date
+	alias lc='ll -lacrh'                      # sort by change time
+	alias lu='ll -laurh'                      # sort by access time
+	alias new='ls -latr | tail -10 | tac'     # list recently created/updated files
+	alias lw='ls -xAh'                        # wide listing format
+	alias lm='ll -Alh | \less -S'             # pipe through less
+	alias lr='ls -lRh'                        # recursive ls
+	alias l.='ll -d .*'                       # show hidden files
 	alias la='ls -lAit --time-style=full-iso' # long listing with inode and group
-	alias lfile="ls -l | egrep -v '^d'"   # files only
-	alias ldir="ls -la | egrep '^d'"      # directories only
-	alias ltree='\tree -CAhF --dirsfirst' # tree view
+	alias lfile="ls -l | egrep -v '^d'"       # files only
+	alias ldir="ls -la | egrep '^d'"          # directories only
+	alias ltree='\tree -CAhF --dirsfirst'     # tree view
 fi
 
 # List all files larger than a given size
 # llfs +10k will find and display all files larger than 10 kilobytes in the currect directory
+# shellcheck disable=SC2142
 alias llfs='_f(){ find . -type f -size "$1" -exec ls --color --classify --human-readable -l {} \; ; }; _f'
 
 # Allow changing directory when missing a space
@@ -408,7 +413,11 @@ alias ping='ping -c 5'
 alias fastping='ping -c 100 -i.2'
 
 # Show open ports
-alias ports='netstat -tulanp'
+if [[ -x "$(command -v netstat)" ]]; then
+	alias ports='netstat -tulanp'
+elif [[ -x "$(command -v ss)" ]]; then
+	alias ports='ss -tulnp'
+fi
 
 # If nmap is installed, set an alias for a network scan of a host (takes a while)
 # Scan delay slows things down but reduces throttling, anti-ddos, auto-block

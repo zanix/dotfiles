@@ -114,6 +114,9 @@ fi
 # Systemd Services
 #######################################################
 
+# Restart PipeWire services
+alias pwrestart='systemctl --user restart pipewire.socket pipewire.service pipewire-pulse.service'
+
 if [[ -x "$(command -v systemctl)" ]]; then
 	# Get a list of all services
 	alias services='systemctl list-units --type=service --state=running,failed'
@@ -408,7 +411,11 @@ alias ping='ping -c 5'
 alias fastping='ping -c 100 -i.2'
 
 # Show open ports
-alias ports='netstat -tulanp'
+if [[ -x "$(command -v netstat)" ]]; then
+	alias ports='netstat -tulanp'
+elif [[ -x "$(command -v ss)" ]]; then
+	alias ports='ss -tulnp'
+fi
 
 # If nmap is installed, set an alias for a network scan of a host (takes a while)
 # Scan delay slows things down but reduces throttling, anti-ddos, auto-block
