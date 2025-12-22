@@ -18,7 +18,9 @@ set nomodeline                  " disable mode lines (security measure)
 set wildmenu                    " make tab completion for files/buffers act like bash
 set wildmode=list:full          " show a list when pressing tab and complete
                                 "    first full match
-set wildignore=*.swp,*.bak,*.pyc,*.class
+
+" Ignore compiled files and version control directories in file completion
+set wildignore=*.swp,*.bak,*.pyc,*.class,*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Backups and undo
@@ -148,3 +150,15 @@ autocmd BufReadPost *
 \ exe "normal g'\"" |
 \ endif |
 \ endif
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Helper functions
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Returns true if paste mode is enabled
+function! HasPaste()
+    if &paste
+        return 'PASTE MODE '
+    endif
+    return ''
+endfunction
