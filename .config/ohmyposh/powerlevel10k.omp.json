@@ -23,7 +23,7 @@
         {
           "background": "transparent",
           "foreground": "#42a9ff",
-          "properties": {
+          "options": {
             "home_icon": "~",
             "style": "full"
           },
@@ -40,10 +40,9 @@
             "{{ if gt .Ahead 0 }}#89d1dc{{ end }}",
             "{{ if gt .Behind 0 }}#4e9a06{{ end }}"
           ],
-          "properties": {
+          "options": {
             "branch_icon": "\uf126 ",
             "commit_icon": "\uf1fa",
-            "fetch_stash_count": true,
             "fetch_status": true,
             "fetch_upstream_icon": true
           },
@@ -60,7 +59,7 @@
         {
           "background": "transparent",
           "foreground": "#689f63",
-          "properties": {
+          "options": {
             "fetch_version": true
           },
           "style": "plain",
@@ -70,7 +69,7 @@
         {
           "background": "transparent",
           "foreground": "#00acd7",
-          "properties": {
+          "options": {
             "fetch_version": true
           },
           "style": "plain",
@@ -80,7 +79,7 @@
         {
           "background": "transparent",
           "foreground": "#4063D8",
-          "properties": {
+          "options": {
             "fetch_version": true
           },
           "style": "plain",
@@ -90,7 +89,7 @@
         {
           "background": "transparent",
           "foreground": "#4063D8",
-          "properties": {
+          "options": {
             "fetch_version": true
           },
           "style": "plain",
@@ -100,7 +99,7 @@
         {
           "background": "transparent",
           "foreground": "#FFDE57",
-          "properties": {
+          "options": {
             "display_mode": "files",
             "fetch_virtual_env": false
           },
@@ -111,7 +110,7 @@
         {
           "background": "transparent",
           "foreground": "#AE1401",
-          "properties": {
+          "options": {
             "display_mode": "files",
             "fetch_version": true
           },
@@ -122,7 +121,7 @@
         {
           "background": "transparent",
           "foreground": "#FEAC19",
-          "properties": {
+          "options": {
             "display_mode": "files",
             "fetch_version": false
           },
@@ -137,7 +136,7 @@
             "{{if contains \"jan\" .Profile}}#f1184c{{end}}"
           ],
           "foreground": "#ffffff",
-          "properties": {
+          "options": {
             "display_default": false
           },
           "style": "plain",
@@ -147,7 +146,7 @@
         {
           "background": "transparent",
           "foreground": "#ffeb3b",
-          "properties": {
+          "options": {
             "threshold": 5000
           },
           "style": "plain",
@@ -161,7 +160,7 @@
             "{{ if eq .Code 0 }}#d3d7cf{{ end }}"
           ],
           "foreground": "#d3d7cf",
-          "properties": {
+          "options": {
             "always_enabled": true
           },
           "style": "plain",
