@@ -165,8 +165,8 @@ fi
 # Aliases and Functions
 #######################################################
 
-if [[ -f "${HOME}/.bash_aliases" ]]; then
-	. "${HOME}/.bash_aliases"
+if [[ -f "${HOME}/.sh_aliases" ]]; then
+	. "${HOME}/.sh_aliases"
 fi
 
 #######################################################

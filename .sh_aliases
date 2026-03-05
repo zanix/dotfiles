@@ -1,4 +1,4 @@
-# ZSH Aliases
+# Shell Aliases
 # shellcheck disable=SC2148,SC2312
 
 #######################################################
@@ -82,8 +82,12 @@ function edit() {
 # Shortcut for edit using only the letter e
 alias e="edit"
 
-# Edit the .zshrc file
-alias zshrc='${=EDITOR} ${ZDOTDIR:-$HOME}/.zshrc'
+# Edit the .{z|ba}shrc file
+if [ -n "$ZSH_VERSION" ]; then
+	alias zshrc='${=EDITOR} ${ZDOTDIR:-$HOME}/.zshrc'
+elif [ -n "$BASH_VERSION" ]; then
+	alias bashrc='$EDITOR $HOME/.bashrc'
+fi
 
 #######################################################
 # Git Aliases
@@ -115,7 +119,7 @@ fi
 #######################################################
 
 # Restart PipeWire services
-alias pwrestart='systemctl --user restart pipewire.socket pipewire.service pipewire-pulse.service'
+alias pwrestart='systemctl --user restart wireplumber pipewire.socket pipewire.service pipewire-pulse.service'
 
 if [[ -x "$(command -v systemctl)" ]]; then
 	# Get a list of all services
@@ -714,7 +718,9 @@ function ytdl() {
 #######################################################
 
 # Fix zsh annoying behavior
-alias history='history 1'
+if [ -n "$ZSH_VERSION" ]; then
+	alias history='history 1'
+fi
 
 # Search command line history
 h() { if [[ -z "$*" ]]; then history; else history | grep "$@"; fi; }

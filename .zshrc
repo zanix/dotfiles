@@ -207,8 +207,8 @@ setopt hist_find_no_dups
 # Aliases and Functions
 #######################################################
 
-if [[ -f "${HOME}/.zsh_aliases" ]]; then
-  source "${HOME}/.zsh_aliases"
+if [[ -f "${HOME}/.sh_aliases" ]]; then
+  source "${HOME}/.sh_aliases"
 fi
 
 #######################################################
