@@ -2,8 +2,8 @@ theme = TokyoNight Night
 
 background-opacity = 0.98
 background-blur-radius = 20
+font-size = 11
+mouse-hide-while-typing = true
+shell-integration-features = ssh-env
 window-height = 55
 window-width = 200
-mouse-hide-while-typing = true
-
-font-size = 11
