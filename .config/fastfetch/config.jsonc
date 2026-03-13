@@ -11,24 +11,20 @@
     },
     "display": {
         "constants": [
-            "──────────────────────────────"
+            "────────────────────────────────"
         ]
+        // "separator": " "
     },
     "modules": [
         {
-            "type": "custom",
-            "format": "┌{$1}●{$1}┐",
-            "outputColor": "90"
-        },
-        {
             "type": "command",
-            "key": " ",
             "text": "echo $(hostname -f)",
+            "key": " ",
             "format": "{#bright_red}{1}"
         },
         {
             "type": "custom",
-            "format": "├{$1}●{$1}┤",
+            "format": "{$1}●{$1}",
             "outputColor": "90"
         },
         {
@@ -38,106 +34,136 @@
         },
         {
             "type": "kernel",
-            "key": "│ ├",
+            "key": " ├ Kernel",
             "keyColor": "yellow"
         },
         {
             "type": "bios",
-            "key": "│ ├",
+            "key": " ├ BIOS",
             "keyColor": "yellow"
         },
         {
             "type": "packages",
-            "key": "│ ├󰏖",
+            "key": " ├󰏖 Packages",
             "keyColor": "yellow"
         },
         {
             "type": "shell",
-            "key": "└ └",
+            "key": " ├ Shell",
             "keyColor": "yellow"
         },
         {
-            "type": "de",
-            "key": " DE",
-            "keyColor": "blue"
+            "type": "command",
+            "text": "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days",
+            "key": " ├󰅐 OS Age",
+            "keyColor": "yellow",
+            "format": "{1}"
+        },
+        {
+            "type": "uptime",
+            "key": " └ Uptime",
+            "keyColor": "yellow"
+        },
+        {
+            "type": "localip",
+            "key": "󰩟 Local IP",
+            "keyColor": "cyan"
+        },
+        {
+            "type": "publicip",
+            "key": " └󰖟 Public",
+            "keyColor": "cyan"
         },
         {
             "type": "lm",
-            "key": "│ ├󰧨",
+            "key": " Login",
+            "keyColor": "magenta"
+        },
+        {
+            "type": "terminal",
+            "key": " └ Terminal",
+            "keyColor": "magenta"
+        },
+        {
+            "type": "de",
+            "key": "󰧨 Desktop",
             "keyColor": "blue"
         },
         {
             "type": "wm",
-            "key": "│ ├",
+            "key": " ├󰖲 WM",
             "keyColor": "blue"
         },
         {
             "type": "wmtheme",
-            "key": "│ ├󰉼",
+            "key": " ├󰉼 WM Theme",
             "keyColor": "blue"
         },
         {
-            "type": "terminal",
-            "key": "└ └",
+            "type": "theme",
+            "key": " ├󰉼 Color Theme",
             "keyColor": "blue"
         },
         {
-            "type": "host",
-            "key": " PC",
+            "type": "icons",
+            "key": " ├󰸉 Icons",
+            "keyColor": "blue"
+        },
+        {
+            "type": "font",
+            "key": " └ Fonts",
+            "keyColor": "blue"
+        },
+        {
+            "type": "chassis",
+            "key": "󰌢 Hardware",
+            "keyColor": "green"
+        },
+        {
+            "type": "board",
+            "key": " ├ Board",
             "keyColor": "green"
         },
         {
             "type": "cpu",
-            "key": "│ ├󰻠",
-            "keyColor": "green"
-        },
-        {
-            "type": "gpu",
-            "key": "│ ├󰍛",
+            "key": " ├󰻠 CPU",
             "keyColor": "green"
         },
         {
             "type": "memory",
-            "key": "│ ├",
+            "key": " ├ RAM",
+            "keyColor": "green"
+        },
+        {
+            "type": "gpu",
+            "key": " ├󰍛 GPU",
+            "keyColor": "green"
+        },
+        {
+            "type": "vulkan",
+            "key": " ├󰍛 Vulkan",
+            "keyColor": "green"
+        },
+        {
+            "type": "display",
+            "key": " ├󰍹 Display",
             "keyColor": "green"
         },
         {
             "type": "disk",
-            "key": "│ ├",
+            "key": " ├ Disk",
             "keyColor": "green",
             "format": "{?name}{name}: {?}{/name}{/}{size-used} / {size-total} ({size-percentage}) - {filesystem}"
         },
         {
             "type": "swap",
-            "key": "└ └󰓡",
+            "key": " └󰓡 Swap",
             "keyColor": "green",
             "format": "Swap: {used} / {total} ({percentage})"
         },
         {
-            "type": "localip",
-            "key": "󰩟 IP",
-            "keyColor": "cyan"
-        },
-        {
-            "type": "publicip",
-            "key": "│ Public IP",
-            "keyColor": "cyan"
-        },
-        {
-            "type": "command",
-            "key": "󰅐 OS Age",
-            "keyColor": "magenta",
-            "text": "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days",
-            "format": "{1}"
-        },
-        {
-            "type": "uptime",
-            "key": "│ Uptime",
-            "keyColor": "magenta"
-        },
-        {
             "type": "custom",
-            "format": "└{$1}●{$1}┘",
+            "format": "{$1}●{$1}",
             "outputColor": "90"
         },
         {
