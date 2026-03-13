@@ -106,6 +106,23 @@ fi
 alias glog="git log --pretty=\"%C(Yellow)%h %C(reset)%ad (%C(Green)%cr%C(reset)) %C(Cyan)%an%x09: %C(reset)%s\" --date=format:%Y-%m-%d\ %H:%M:%S"
 
 #######################################################
+# Pacman Aliases
+#######################################################
+
+if [[ -x "$(command -v pacman)" ]]; then
+	alias rmpkg="sudo pacman -Rsn"
+	alias cleanch="sudo pacman -Scc"
+	alias fixpacman="sudo rm /var/lib/pacman/db.lck"
+	alias update="sudo pacman -Syu"
+
+	# Cleanup orphaned packages
+	alias cleanup="sudo pacman -Rsn $(pacman -Qtdq)"
+
+	# Recent installed packages
+	alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
+fi
+
+#######################################################
 # Generic Aliases
 #######################################################
 
@@ -131,6 +148,9 @@ if [[ -x "$(command -v systemctl)" ]]; then
 
 	# Clear system log entries from the systemd journal
 	alias clearsystemlogs='echo -ne "\033[1;34mBefore\033[0m: "; journalctl --disk-usage; sudo journalctl --rotate; sudo journalctl --vacuum-time=1s; echo -ne "\033[1;34mAfter\033[0m: "; journalctl --disk-usage'
+
+	# Get the error messages from journalctl
+	alias jctl="journalctl -p 3 -xb"
 fi
 
 #######################################################
