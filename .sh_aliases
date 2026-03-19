@@ -106,7 +106,7 @@ fi
 alias glog="git log --pretty=\"%C(Yellow)%h %C(reset)%ad (%C(Green)%cr%C(reset)) %C(Cyan)%an%x09: %C(reset)%s\" --date=format:%Y-%m-%d\ %H:%M:%S"
 
 #######################################################
-# Pacman Aliases
+# Update Aliases
 #######################################################
 
 if [[ -x "$(command -v pacman)" ]]; then
@@ -116,10 +116,33 @@ if [[ -x "$(command -v pacman)" ]]; then
 	alias update="sudo pacman -Syu"
 
 	# Cleanup orphaned packages
-	alias cleanup="sudo pacman -Rsn $(pacman -Qtdq)"
+	cleanup() {
+		local orphans
+		orphans=$(pacman -Qtdq)
+		if [[ -n "${orphans}" ]]; then
+			sudo pacman -Rsn "${orphans}"
+		else
+			echo "No orphaned packages found."
+		fi
+	}
 
 	# Recent installed packages
 	alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
+elif [[ -x "$(command -v apt)" ]]; then
+	alias rmpkg="sudo apt remove --purge"
+	alias cleanch="sudo apt clean"
+	alias fixapt="sudo rm /var/lib/dpkg/lock-frontend; sudo rm /var/lib/dpkg/lock; sudo dpkg --configure -a"
+	alias update="sudo apt update && sudo apt upgrade"
+
+	alias cleanup="sudo apt autoremove --purge"
+
+	# Recent installed packages
+	alias rip="grep ' install ' /var/log/dpkg.log | tail -200 | nl"
+fi
+
+# Update zinit plugins
+if [[ -x "$(command -v zinit)" ]]; then
+	alias zsh-update='zinit self-update && zinit update --all'
 fi
 
 #######################################################

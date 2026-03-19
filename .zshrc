@@ -6,14 +6,19 @@ if [[ -x "$(command -v tmux)" && -n "${PS1}" && -z "${TMUX}" && -n "${SSH_TTY}" 
   (tmux has-session -t "${USER}" && tmux attach-session -t "${USER}") || tmux new-session -s "${USER}" && exit 0
 fi
 
+# Detect unraid and set a variable for it
+if [[ -f /etc/unraid-version ]]; then
+  export UNRAID=true
+fi
+
 # Display Fastfetch in Tmux only once
 if [[ -x "$(command -v fastfetch)" && -z "${_motd_listed}" ]]; then
-  case "${TMUX_PANE}" in
-    %0) fastfetch
-        export _motd_listed=yes
-        ;;
-    *)  ;;
-  esac
+  if [[ -n "${TMUX_PANE}" && -v UNRAID && $UNRAID == true ]]; then
+    fastfetch --logo-type auto --logo /boot/config/fast-unraid-circle-24.txt
+  elif [[ -n "${TMUX_PANE}" ]]; then
+    fastfetch
+    export _motd_listed=true
+  fi
 fi
 
 #######################################################
@@ -141,7 +146,11 @@ pathappend "${HOME}/.phpenv/bin" "${HOME}/.composer/vendor/bin" "${HOME}/.config
 #######################################################
 
 # Load completions before plugins to avoid reinitializing
-autoload -Uz compinit && compinit
+if [[ -v $UNRAID && $UNRAID == true ]]; then
+  autoload -Uz compinit && compinit -u
+else
+  autoload -Uz compinit && compinit
+fi
 
 zinit light lukechilds/zsh-nvm
 zinit light zdharma-continuum/fast-syntax-highlighting
