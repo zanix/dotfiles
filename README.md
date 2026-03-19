@@ -62,19 +62,23 @@ Install dependencies on your system.
 <details><summary>Arch Installation</summary>
 
 ```shell
-sudo pacman -Sy fd fzf git neovim stow tmux wl-clipboard yq zoxide zsh
+sudo pacman -Sy bat btop chafa eza fastfetch fd fzf git neovim stow tmux wl-clipboard yq zoxide zsh
 ```
 
 Install `ifstat` and `oh-my-posh` from the AUR
 
 ```shell
-yay ifstat oh-my-posh-bin lazydocker-bin
+paru -S ifstat oh-my-posh-bin
 ```
 
 #### Optional Arch packages
 
 ```shell
-sudo pacman -Sy bat btop chafa eza fastfetch lazygit
+sudo pacman -Sy lazygit
+```
+
+```shell
+paru -S lazydocker-bin
 ```
 
 ----
