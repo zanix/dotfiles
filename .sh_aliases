@@ -141,9 +141,7 @@ elif [[ -x "$(command -v apt)" ]]; then
 fi
 
 # Update zinit plugins
-if [[ -x "$(command -v zinit)" ]]; then
-	alias zsh-update='zinit self-update && zinit update --all'
-fi
+alias zsh-update='zinit self-update && zinit update --all'
 
 #######################################################
 # Generic Aliases
@@ -460,10 +458,10 @@ alias ping='ping -c 5'
 alias fastping='ping -c 100 -i.2'
 
 # Show open ports
-if [[ -x "$(command -v netstat)" ]]; then
-	alias ports='netstat -tulanp'
-elif [[ -x "$(command -v ss)" ]]; then
+if [[ -x "$(command -v ss)" ]]; then
 	alias ports='ss -tulnp'
+elif [[ -x "$(command -v netstat)" ]]; then
+	alias ports='netstat -tulanp'
 fi
 
 # If nmap is installed, set an alias for a network scan of a host (takes a while)
