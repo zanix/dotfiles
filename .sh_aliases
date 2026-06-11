@@ -84,9 +84,9 @@ alias e="edit"
 
 # Edit the .{z|ba}shrc file
 if [ -n "$ZSH_VERSION" ]; then
-	alias zshrc='${=EDITOR} ${ZDOTDIR:-$HOME}/.zshrc'
+	alias profile='${=EDITOR} ${ZDOTDIR:-$HOME}/.zshrc'
 elif [ -n "$BASH_VERSION" ]; then
-	alias bashrc='$EDITOR $HOME/.bashrc'
+	alias profile='$EDITOR $HOME/.bashrc'
 fi
 
 #######################################################

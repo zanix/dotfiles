@@ -30,7 +30,7 @@ ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
 # Download Zinit, if it's not installed yet
 if [[ ! -d "${ZINIT_HOME}" ]]; then
-  mkdir -p "$(dirname ${ZINIT_HOME})"
+  mkdir -p "$(dirname "${ZINIT_HOME}")"
   git clone https://github.com/zdharma-continuum/zinit.git "${ZINIT_HOME}"
 fi
 
@@ -146,7 +146,7 @@ pathappend "${HOME}/.phpenv/bin" "${HOME}/.composer/vendor/bin" "${HOME}/.config
 #######################################################
 
 # Load completions before plugins to avoid reinitializing
-if [[ -v $UNRAID && $UNRAID == true ]]; then
+if [[ -v UNRAID && $UNRAID == true ]]; then
   autoload -Uz compinit && compinit -u
 else
   autoload -Uz compinit && compinit
