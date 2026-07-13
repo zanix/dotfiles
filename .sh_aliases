@@ -89,6 +89,11 @@ elif [ -n "$BASH_VERSION" ]; then
 	alias profile='$EDITOR $HOME/.bashrc'
 fi
 
+# Fix zsh compinit insecure directories warning
+if [ -n "$ZSH_VERSION" ]; then
+	alias fixcompinit="compaudit | xargs chmod ga-w"
+fi
+
 #######################################################
 # Git Aliases
 #######################################################
@@ -190,22 +195,22 @@ if [[ ${_SKIP_LS_COLORIZED} = false ]]; then
 			(\eza --help | grep -q -e "--icons" &> /dev/null) && alias eza='eza --icons=always'
 		fi
 
-		alias ls='eza --all --classify --group-directories-first --color=auto --color-scale $@'
-		alias ll='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale $@'
-		alias labc='eza --grid --all --classify --color=auto --color-scale --sort name $@'
-		alias lx='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale --sort extension $@'
-		alias lk='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale --sort size $@'
-		alias lt='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale --sort modified $@'
-		alias lc='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale --changed --sort changed $@'
-		alias lu='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale --accessed --sort accessed $@'
-		alias new='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale --sort modified | tail -10 | tac $@'
-		alias lw='eza --all --classify --group-directories-first --color=auto --color-scale $@'
-		alias lm='\eza --long --all --classify --group-directories-first --color=always --color-scale $@ | \less -FRi'
-		alias lr='eza --grid --all --classify --group-directories-first --color=auto --color-scale --recurse $@'
-		alias l.='eza --all --all --classify --group-directories-first --list-dirs --color=auto --color-scale .* $@'
+		alias ls='eza --all --classify --group-directories-first --color=auto --color-scale=all $@'
+		alias ll='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale=all $@'
+		alias labc='eza --grid --all --classify --color=auto --color-scale=all --sort name $@'
+		alias lx='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale=all --sort extension $@'
+		alias lk='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale=all --sort size $@'
+		alias lt='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale=all --sort modified $@'
+		alias lc='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale=all --changed --sort changed $@'
+		alias lu='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale=all --accessed --sort accessed $@'
+		alias new='eza --long --all --links --group --modified --classify --git --group-directories-first --color=auto --color-scale=all --sort modified | tail -10 | tac $@'
+		alias lw='eza --all --classify --group-directories-first --color=auto --color-scale=all $@'
+		alias lm='\eza --long --all --classify --group-directories-first --color=always --color-scale=all $@ | \less -FRi'
+		alias lr='eza --grid --all --classify --group-directories-first --color=auto --color-scale=all --recurse $@'
+		alias l.='eza --all --all --classify --group-directories-first --list-dirs --color=auto --color-scale=all .* $@'
 		alias la='eza --long --all --links --group --modified --accessed --created --binary --header --inode --blocksize $@'
-		alias lfile='eza --all --classify --color=auto --color-scale --show-symlinks --only-files $@'
-		alias ldir='eza --all --classify --group-directories-first --color=auto --color-scale --show-symlinks --only-dirs $@'
+		alias lfile='eza --all --classify --color=auto --color-scale=all --show-symlinks --only-files $@'
+		alias ldir='eza --all --classify --group-directories-first --color=auto --color-scale=all --show-symlinks --only-dirs $@'
 		alias ltree='\eza --all --git --group-directories-first --header --long --tree $@'
 
 	# Use ls with command line options
