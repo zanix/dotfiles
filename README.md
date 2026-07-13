@@ -387,6 +387,20 @@ Or logout, log back in to launch zsh
 
 Dotfiles are now ready to use.
 
+## Updating
+
+To update the zsh plugins and snippets:
+
+```shell
+zinit update --all
+```
+
+To update the tmux plugins, load up tmux and enter the following:
+
+```shell
+prefix + U
+```
+
 ## Inspiration
 
 I used these dotfile repos as a start to create my own.
