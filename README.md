@@ -101,8 +101,8 @@ sudo apt install fd-find git ifstat python3-venv stow tmux wl-clipboard zoxide z
 Install fzf via git
 
 ```shell
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install --no-fish --no-update-rc
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf \
+&& ~/.fzf/install --no-fish --no-update-rc
 ```
 
 Install `oh-my-posh` using the official install script
@@ -119,53 +119,30 @@ curl -s https://ohmyposh.dev/install.sh | bash -s
 
 Neovim needs to be installed via the appimage package
 
-<details><summary>AMD64</summary>
-
 ```shell
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
-chmod u+x nvim-linux-x86_64.appimage
+ARCH=$(uname -m) \
+&& curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${ARCH}.appimage \
+&& chmod u+x nvim-linux-${ARCH}.appimage
 ```
-
-</details>
-
-<details><summary>ARM64</summary>
-
-```shell
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-arm64.appimage
-chmod u+x nvim-linux-arm64.appimage
-```
-
-</details>
 
 Install for all users or for the current user
 
 ```shell
-mv nvim-linux-x86_64.appimage ~/.local/bin/nvim
+mv nvim-linux-${ARCH}.appimage /usr/local/bin/nvim
 ```
 
 ```shell
-mv nvim-linux-x86_64.appimage /usr/local/bin/nvim
+mv nvim-linux-${ARCH}.appimage ~/.local/bin/nvim
 ```
 
 `yq` needs to be installed manually
 
-<details><summary>AMD64</summary>
-
 ```shell
-wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq && chmod +x /usr/local/bin/yq
+ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo arm64 || echo amd64) \
+&& sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${ARCH} -O /usr/local/bin/yq && sudo chmod +x /usr/local/bin/yq
 ```
 
-</details>
-
-<details><summary>ARM64</summary>
-
-```shell
-wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_arm64 -O /usr/local/bin/yq && chmod +x /usr/local/bin/yq
-```
-
-</details>
-
-#### Optional Ubuntu AMD64 Packages
+#### Optional Ubuntu Packages
 
 ```shell
 sudo apt install bat btop chafa
@@ -181,37 +158,23 @@ sudo snap install btop
 `eza` needs to be installed via ppa
 
 ```shell
-sudo mkdir -p /etc/apt/keyrings
-wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
-echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
-sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
-sudo apt update
-sudo apt install -y eza
+sudo mkdir -p /etc/apt/keyrings \
+&& wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg \
+&& echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list \
+&& sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list \
+&& sudo apt update \
+&& sudo apt install -y eza
 ```
 
 Or manually
 
-<details><summary>AMD64</summary>
-
 ```shell
-wget -c https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-gnu.tar.gz -O - | tar xz
-sudo chmod +x eza
-sudo chown root:root eza
-sudo mv eza /usr/local/bin/eza
+ARCH=$(uname -m) \
+&& wget -c https://github.com/eza-community/eza/releases/latest/download/eza_${ARCH}-unknown-linux-gnu.tar.gz -O - | tar xz \
+&& sudo chmod +x eza \
+&& sudo chown root:root eza \
+&& sudo mv eza /usr/local/bin/eza
 ```
-
-</details>
-
-<details><summary>ARM64</summary>
-
-```shell
-wget -c https://github.com/eza-community/eza/releases/latest/download/eza_aarch64-unknown-linux-gnu.zip -O - | tar xz
-sudo chmod +x eza
-sudo chown root:root eza
-sudo mv eza /usr/local/bin/eza
-```
-
-</details>
 
 `fastfetch` needs to be installed via ppa
 
@@ -225,54 +188,36 @@ sudo apt install fastfetch
 
 Or Manually
 
-<details><summary>AMD64</summary>
-
 ```shell
-wget https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-amd64.deb
-sudo dpkg -l fastfetch-linux-amd64.deb
+ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo aarch64 || echo amd64) \
+&& wget https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-${ARCH}.deb \
+&& sudo dpkg -i fastfetch-linux-${ARCH}.deb
 ```
-
-</details>
-
-<details><summary>ARM64</summary>
-
-```shell
-wget https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-aarch64.deb
-sudo dpkg -l fastfetch-linux-aarch64.deb
-```
-
-</details>
 
 `lazydocker` needs to be installed manually
 
 ```shell
-DIR=/usr/local/bin/
-curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | sudo bash
+DIR=/usr/local/bin \
+ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo arm64 || echo x86_64) \
+&& LAZYDOCKER_VERSION=$(curl -L -s -H 'Accept: application/json' https://github.com/jesseduffield/lazydocker/releases/latest | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/') \
+&& LAZYDOCKER_FILE="lazydocker_${LAZYDOCKER_VERSION//v/}_$(uname -s)_${ARCH}.tar.gz" \
+&& LAZYDOCKER_URL="https://github.com/jesseduffield/lazydocker/releases/download/${LAZYDOCKER_VERSION}/${LAZYDOCKER_FILE}" \
+&& curl -L -o lazydocker.tar.gz $LAZYDOCKER_URL \
+&& tar xzvf lazydocker.tar.gz lazydocker \
+&& sudo install -Dm 755 lazydocker -t "$DIR" \
+&& rm lazydocker lazydocker.tar.gz
 ```
 
 `lazygit` needs to be installed manually
 
-<details><summary>AMD64</summary>
-
 ```shell
-LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
-curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-tar xf lazygit.tar.gz lazygit
-sudo install lazygit -D -t /usr/local/bin/
+ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo arm64 || echo x86_64) \
+&& LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*') \
+&& curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_${ARCH}.tar.gz" \
+&& tar xf lazygit.tar.gz lazygit \
+&& sudo install lazygit -D -t /usr/local/bin/ \
+rm lazygit lazygit.tar.gz
 ```
-
-</details>
-
-<details><summary>ARM64</summary>
-
-```shell
-LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
-curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_linux_arm64.tar.gz"
-tar xf lazygit.tar.gz lazygit
-sudo install lazygit -D -t /usr/local/bin/
-```
-
-</details>
 
 ----
 
