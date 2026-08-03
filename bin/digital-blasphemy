@@ -1,0 +1,201 @@
+#!/usr/bin/env bash
+# DESCRIPTION: Moves Digital Blasphemy images from a local directory to a
+# network share and a local directory.
+# TARGETED FILES:
+# - Digital Blasphemy images in JPG format.
+
+set -euo pipefail
+IFS=$'\n\t'
+
+# -----------------------------
+# Config
+# -----------------------------
+
+# Load configuration from external file
+CONFIG_FILE="./db.env"
+if [[ -f "$CONFIG_FILE" ]]; then
+  # shellcheck source=/dev/null
+  source "$CONFIG_FILE"
+fi
+
+# ------------------------------
+# Mount Variables
+# ------------------------------
+
+# smb4k mount location
+SMB4K_MOUNT="/run/smb4k/${USER}/${REMOTE_SERVER}/${REMOTE_SHARE}"
+
+# GVFS mount directory path
+GVFS_PATH="/run/user/$(id -u)/gvfs/smb-share:server=${REMOTE_SERVER},share=${REMOTE_SHARE}"
+
+# KIO Fuse base path
+KIO_BASE="${USER}@${REMOTE_SERVER}/${REMOTE_SHARE}"
+KIO_PATH="/smb/${KIO_BASE}"
+
+# KIO URI for mounting via KIO/GVFS
+KIO_URI="smb://${KIO_BASE}"
+
+# Set color codes for output
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+CYAN=$(tput setaf 6)
+ORANGE=$(tput setaf 208)
+BOLD=$(tput bold)
+NC=$(tput sgr0) # No or reset color
+
+# -----------------------------
+# Helpers
+# -----------------------------
+
+# KIO Fuse mount directory path
+kio_get_mount() {
+  local mountpoint
+  mountpoint="$(findmnt -t fuse.kio-fuse -o TARGET --noheadings | head -n 1)"
+  if [[ -n "$mountpoint" ]]; then
+    echo "${mountpoint}${KIO_PATH}"
+  else
+    echo ""
+  fi
+}
+
+have() { command -v "$1" >/dev/null 2>&1; }
+
+is_mounted_at() {
+  # Checks mount table for an exact mountpoint match
+  mount | grep -Fq "on $1 "
+}
+
+NETWORK_MOUNT=""
+
+echo "${CYAN}${BOLD}== Digital Blasphemy Image Mover ==${NC}"
+
+# -----------------------------
+# Pick a network mount (smb4k first, then kio, then gvfs)
+# -----------------------------
+
+if is_mounted_at "$SMB4K_MOUNT"; then
+  NETWORK_MOUNT="$SMB4K_MOUNT"
+elif [[ -d "$(kio_get_mount)" ]]; then
+  # Already mounted via KIO Fuse (directory exists)
+  NETWORK_MOUNT="$(kio_get_mount)"
+elif have kioclient; then
+  # Try to mount via dbus
+  echo "${ORANGE}⚠${NC} Mount not found; trying KIO Fuse (${KIO_URI})..."
+  if dbus-send --session --print-reply --type=method_call --dest=org.kde.KIOFuse /org/kde/KIOFuse org.kde.KIOFuse.VFS.mountUrl string:"${KIO_URI}" >/dev/null 2>&1; then
+    sleep 2
+    if [[ -d "$(kio_get_mount)" ]]; then
+      NETWORK_MOUNT="$(kio_get_mount)"
+    else
+      echo "${RED}✗${NC} KIO Fuse mount failed."
+    fi
+  fi
+elif [[ -d "$GVFS_PATH" ]]; then
+  # Already mounted via gvfs (directory exists)
+  NETWORK_MOUNT="$GVFS_PATH"
+elif have gio; then
+  # Try to mount via gvfs using gio (if gvfs isn't installed, gio likely won't exist)
+  echo "${ORANGE}⚠${NC} Mount not found; trying GVFS (${KIO_URI})..."
+  if gio mount "$KIO_URI" >/dev/null 2>&1; then
+    sleep 2
+    if [[ -d "$GVFS_PATH" ]]; then
+      NETWORK_MOUNT="$GVFS_PATH"
+    else
+      echo "${RED}✗${NC} GVFS mount failed."
+    fi
+  fi
+fi
+
+if [[ -z "$NETWORK_MOUNT" ]]; then
+  cat >&2 <<EOF
+${RED}✗${NC} No SMB mount available.
+
+Tried:
+  1) smb4k mountpoint: ${YELLOW}${SMB4K_MOUNT}${NC}
+  2) KIO Fuse mountpoint: ${YELLOW}$(kio_get_mount)${NC} (using kioclient)
+  3) gvfs mountpoint:  ${YELLOW}${GVFS_PATH}${NC} (using gio)
+
+Fix:
+  - Install/Configure smb4k and mount ${YELLOW}//${REMOTE_SERVER}/${REMOTE_SHARE}${NC}
+  - Install/configure KIO Fuse and mount ${YELLOW}//${REMOTE_SERVER}/${REMOTE_SHARE}${NC}
+  - Install/configure GVFS + gio and mount ${YELLOW}//${REMOTE_SERVER}/${REMOTE_SHARE}${NC}
+EOF
+  exit 1
+fi
+
+echo "  Using network mount: ${YELLOW}${NETWORK_MOUNT}${NC}"
+
+# -----------------------------
+# Paths
+# -----------------------------
+
+NETWORK_PARENT="${NETWORK_MOUNT}/${REMOTE_PATH}"
+NETWORK_SINGLE="${NETWORK_PARENT}/single/4096x2304"
+NETWORK_DUAL="${NETWORK_PARENT}/dual/7680x2160"
+NETWORK_MOBILE="${NETWORK_PARENT}/mobile/1620x2880"
+
+# Ensure local directories exist
+# mkdir -p "${LOCAL_DIR}/Single" "${LOCAL_DIR}/Dual"
+
+# Verify the remote path exists
+if [[ ! -d "${NETWORK_PARENT}" ]]; then
+  echo "${RED}✗${NC} Remote path not found: ${YELLOW}${NETWORK_PARENT}${NC}"
+  exit 1
+fi
+
+# -----------------------------
+# Process files
+# -----------------------------
+
+shopt -s nullglob
+for FILE in "$SOURCE_DIR"/*.jpg; do
+  base="$(basename "$FILE")"
+
+  if [[ "$base" == *"_single_4096x2304.jpg" ]]; then
+    if ! cp -f -- "$FILE" "${LOCAL_DIR}/Single/"; then
+      echo "${RED}✗${NC} Failed to copy ${YELLOW}${base}${NC} to ${YELLOW}${LOCAL_DIR}/Single/${NC}"
+    else
+      echo "Copied ${YELLOW}${base}${NC} to ${YELLOW}${LOCAL_DIR}/Single/${NC}"
+    fi
+
+    if ! cp -f -- "$FILE" "${NETWORK_SINGLE}/"; then
+      echo "${RED}✗${NC} Failed to copy ${YELLOW}${base}${NC} to ${YELLOW}${NETWORK_SINGLE}/${NC}"
+    else
+      echo "Copied ${YELLOW}${base}${NC} to ${YELLOW}${NETWORK_SINGLE}/${NC}"
+    fi
+
+    if ! rm -f -- "$FILE"; then
+      echo "${RED}✗${NC} Failed to remove ${YELLOW}${base}${NC}"
+    fi
+
+  elif [[ "$base" == *"_dual_7680x2160.jpg" ]]; then
+    if ! cp -f -- "$FILE" "${LOCAL_DIR}/Dual/"; then
+      echo "${RED}✗${NC} Failed to copy ${YELLOW}${base}${NC} to ${YELLOW}${LOCAL_DIR}/Dual/${NC}"
+    else
+      echo "Copied ${YELLOW}${base}${NC} to ${YELLOW}${LOCAL_DIR}/Dual/${NC}"
+    fi
+
+    if ! cp -f -- "$FILE" "${NETWORK_DUAL}/"; then
+      echo "${RED}✗${NC} Failed to copy ${YELLOW}${base}${NC} to ${YELLOW}${NETWORK_DUAL}/${NC}"
+    else
+      echo "Copied ${YELLOW}${base}${NC} to ${YELLOW}${NETWORK_DUAL}/${NC}"
+    fi
+
+    if ! rm -f -- "$FILE"; then
+      echo "${RED}✗${NC} Failed to remove ${YELLOW}${base}${NC}"
+    fi
+
+  elif [[ "$base" == *"_mobile_1620x2880.jpg" ]]; then
+    if ! cp -f -- "$FILE" "${NETWORK_MOBILE}/"; then
+      echo "${RED}✗${NC} Failed to copy ${YELLOW}${base}${NC} to ${YELLOW}${NETWORK_MOBILE}/${NC}"
+    else
+      echo "Copied ${YELLOW}${base}${NC} to ${YELLOW}${NETWORK_MOBILE}/${NC}"
+    fi
+
+    if ! rm -f -- "$FILE"; then
+      echo "${RED}✗${NC} Failed to remove ${YELLOW}${base}${NC}"
+    fi
+  fi
+done
+
+echo "${GREEN}✔${NC} Processing complete."
