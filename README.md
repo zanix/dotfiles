@@ -159,21 +159,21 @@ sudo snap install btop
 
 ```shell
 sudo mkdir -p /etc/apt/keyrings \
-&& wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg \
-&& echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list \
-&& sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list \
-&& sudo apt update \
-&& sudo apt install -y eza
+  && wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg \
+  && echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list \
+  && sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list \
+  && sudo apt update \
+  && sudo apt install -y eza
 ```
 
 Or manually
 
 ```shell
 ARCH=$(uname -m) \
-&& wget -c https://github.com/eza-community/eza/releases/latest/download/eza_${ARCH}-unknown-linux-gnu.tar.gz -O - | tar xz \
-&& sudo chmod +x eza \
-&& sudo chown root:root eza \
-&& sudo mv eza /usr/local/bin/eza
+  && `wget -c https://github.com/eza-community/eza/releases/latest/download/eza_${ARCH}-unknown-linux-gnu.tar.gz -O - | tar xz \
+  && sudo chmod +x eza \
+  && sudo chown root:root eza \
+  && sud`o mv eza /usr/local/bin/eza
 ```
 
 `fastfetch` needs to be installed via ppa
@@ -190,33 +190,33 @@ Or Manually
 
 ```shell
 ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo aarch64 || echo amd64) \
-&& wget https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-${ARCH}.deb \
-&& sudo dpkg -i fastfetch-linux-${ARCH}.deb
+  && wget https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-${ARCH}.deb \
+  && sudo dpkg -i fastfetch-linux-${ARCH}.deb
 ```
 
 `lazydocker` needs to be installed manually
 
 ```shell
 DIR=/usr/local/bin \
-ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo arm64 || echo x86_64) \
-&& LAZYDOCKER_VERSION=$(curl -L -s -H 'Accept: application/json' https://github.com/jesseduffield/lazydocker/releases/latest | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/') \
-&& LAZYDOCKER_FILE="lazydocker_${LAZYDOCKER_VERSION//v/}_$(uname -s)_${ARCH}.tar.gz" \
-&& LAZYDOCKER_URL="https://github.com/jesseduffield/lazydocker/releases/download/${LAZYDOCKER_VERSION}/${LAZYDOCKER_FILE}" \
-&& curl -L -o lazydocker.tar.gz $LAZYDOCKER_URL \
-&& tar xzvf lazydocker.tar.gz lazydocker \
-&& sudo install -Dm 755 lazydocker -t "$DIR" \
-&& rm lazydocker lazydocker.tar.gz
+  && ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo arm64 || echo x86_64) \
+  && LAZYDOCKER_VERSION=$(curl -L -s -H 'Accept: application/json' https://github.com/jesseduffield/lazydocker/releases/latest | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/') \
+  && LAZYDOCKER_FILE="lazydocker_${LAZYDOCKER_VERSION//v/}_$(uname -s)_${ARCH}.tar.gz" \
+  && LAZYDOCKER_URL="https://github.com/jesseduffield/lazydocker/releases/download/${LAZYDOCKER_VERSION}/${LAZYDOCKER_FILE}" \
+  && curl -L -o lazydocker.tar.gz $LAZYDOCKER_URL \
+  && tar xzvf lazydocker.tar.gz lazydocker \
+  && sudo install -Dm 755 lazydocker -t "$DIR" \
+  && rm lazydocker lazydocker.tar.gz
 ```
 
 `lazygit` needs to be installed manually
 
 ```shell
 ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo arm64 || echo x86_64) \
-&& LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*') \
-&& curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_${ARCH}.tar.gz" \
-&& tar xf lazygit.tar.gz lazygit \
-&& sudo install lazygit -D -t /usr/local/bin/ \
-rm lazygit lazygit.tar.gz
+  && LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*') \
+  && curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_${ARCH}.tar.gz" \
+  && tar xf lazygit.tar.gz lazygit \
+  && sudo install lazygit -D -t /usr/local/bin/ \
+  &&rm lazygit lazygit.tar.gz
 ```
 
 ----
