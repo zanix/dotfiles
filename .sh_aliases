@@ -154,7 +154,7 @@ alias zsh-update='zinit self-update && zinit update --all'
 
 # Create a new tmux session named after the current directory
 if [[ -x "$(command -v tmux)" ]]; then
-	alias tn="tmux new -s $(pwd | sed 's/.*\///g')"
+	alias tn='tmux new -s $(pwd | sed '\''s/.*\///g'\'')'
 fi
 
 #######################################################
@@ -191,7 +191,7 @@ if [[ ${_SKIP_LS_COLORIZED} = false ]]; then
 	# shellcheck disable=SC2142
 	if [[ ${_SKIP_EZA} = false ]] && [[ -x "$(command -v eza)" ]]; then
 		# Add icons to eza if unicode and the icon paramter is supported
-		if [[ $(locale charmap) == 'UTF-8' ]]; then
+		if [[ -v HAOS ]] || [[ $(locale charmap) == 'UTF-8' ]]; then
 			(\eza --help | grep -q -e "--icons" &> /dev/null) && alias eza='eza --icons=always'
 		fi
 
@@ -327,11 +327,12 @@ alias cp='cp -i'
 # Use -f if you want to skip all prompts (-i option is ignored)
 alias mv='mv -i'
 
-# Prompt whether to remove destinations
-alias ln='ln -i'
+# Prompt whether to create a new link
+[[ ! -v HAOS ]] && alias ln='ln -i'
 
 # Prompt before every removal
-alias rm='rm -i --preserve-root'
+[[ ! -v HAOS ]] && alias rm='rm -i --preserve-root'
+[[ -v HAOS ]] && alias rm='rm -i'
 
 # Remove a directory and all files
 alias rmd='\rm --recursive --force --verbose'
@@ -343,13 +344,13 @@ alias shred='shred --force --remove --verbose'
 alias mkdir='mkdir -pv'
 
 # Safety net for changing permisions on /
-alias chown='chown --preserve-root'
-alias chmod='chmod --preserve-root'
-alias chgrp='chgrp --preserve-root'
+[[ ! -v HAOS ]] && alias chown='chown --preserve-root'
+[[ ! -v HAOS ]] && alias chmod='chmod --preserve-root'
+[[ ! -v HAOS ]] && alias chgrp='chgrp --preserve-root'
 
 # Display disk space available and show file system type
-alias df="df -Th | grep -Ev '(squashfs)'"
-alias ds="df -Th | grep -Ev '(squashfs|udev|tmpfs)'"
+alias ds="\df -Th | grep -Ev '(squashfs|udev|tmpfs)'"
+alias df="\df -Th | grep -Ev '(squashfs)'"
 
 # List block devices but show more info including the files systems and permissions
 # and removes all snap packages from the list
@@ -628,7 +629,7 @@ function cpp() {
           printf "]\r"
         }
       }
-    END { print "" }' total_size=$(stat -c '%s' "${1}") count=0
+    END { print "" }' total_size="$(stat -c '%s' "${1}")" count=0
   fi
 }
 
@@ -660,8 +661,8 @@ function mkdirg() {
 function repeat() {
 	local i max
 	max=$1; shift;
-	for ((i=1; i <= max ; i++)); do  # --> C-like syntax
-		eval "$@";
+	for ((i=1; i <= max ; i++)); do
+		"$@";
 	done
 }
 

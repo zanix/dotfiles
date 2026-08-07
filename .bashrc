@@ -1,5 +1,5 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
-# shellcheck disable=SC1091,SC2148,SC2312
+# shellcheck disable=SC1090,SC1091,SC2148,SC2312
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
