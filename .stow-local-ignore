@@ -12,6 +12,7 @@ _darcs
 \.git
 \.gitignore
 \.gitmodules
+\.zed
 
 .+~          # emacs backup files
 \#.*\#       # emacs autosave files
