@@ -11,11 +11,14 @@ IFS=$'\n\t'
 # Config
 # -----------------------------
 
-# Load configuration from external file
-CONFIG_FILE="./db.env"
-if [[ -f "$CONFIG_FILE" ]]; then
-  # shellcheck source=/dev/null
-  source "$CONFIG_FILE"
+# Load configuration from .env file if it exists
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "${SCRIPT_DIR}/db.env" ]]; then
+  source "${SCRIPT_DIR}/db.env"
+  # echo "Loaded configuration from ${SCRIPT_DIR}/db.env"
+else
+  echo "Configuration file ${SCRIPT_DIR}/db.env not found."
+  exit 1
 fi
 
 # ------------------------------
