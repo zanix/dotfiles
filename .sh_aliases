@@ -191,7 +191,7 @@ if [[ ${_SKIP_LS_COLORIZED} = false ]]; then
 	# shellcheck disable=SC2142
 	if [[ ${_SKIP_EZA} = false ]] && [[ -x "$(command -v eza)" ]]; then
 		# Add icons to eza if unicode and the icon paramter is supported
-		if [[ -v HAOS ]] || [[ $(locale charmap) == 'UTF-8' ]]; then
+		if [[ -v HAOS && $HAOS == true ]] || [[ $(locale charmap) == 'UTF-8' ]]; then
 			(\eza --help | grep -q -e "--icons" &> /dev/null) && alias eza='eza --icons=always'
 		fi
 
@@ -328,11 +328,11 @@ alias cp='cp -i'
 alias mv='mv -i'
 
 # Prompt whether to create a new link
-[[ ! -v HAOS ]] && alias ln='ln -i'
+[[ ! -v HAOS && $HAOS == true ]] && alias ln='ln -i'
 
 # Prompt before every removal
-[[ ! -v HAOS ]] && alias rm='rm -i --preserve-root'
-[[ -v HAOS ]] && alias rm='rm -i'
+[[ ! -v HAOS && $HAOS == true ]] && alias rm='rm -i --preserve-root'
+[[ -v HAOS && $HAOS == true ]] && alias rm='rm -i'
 
 # Remove a directory and all files
 alias rmd='\rm --recursive --force --verbose'
@@ -344,9 +344,9 @@ alias shred='shred --force --remove --verbose'
 alias mkdir='mkdir -pv'
 
 # Safety net for changing permisions on /
-[[ ! -v HAOS ]] && alias chown='chown --preserve-root'
-[[ ! -v HAOS ]] && alias chmod='chmod --preserve-root'
-[[ ! -v HAOS ]] && alias chgrp='chgrp --preserve-root'
+[[ ! -v HAOS && $HAOS == true ]] && alias chown='chown --preserve-root'
+[[ ! -v HAOS && $HAOS == true ]] && alias chmod='chmod --preserve-root'
+[[ ! -v HAOS && $HAOS == true ]] && alias chgrp='chgrp --preserve-root'
 
 # Display disk space available and show file system type
 alias ds="\df -Th | grep -Ev '(squashfs|udev|tmpfs)'"

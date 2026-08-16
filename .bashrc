@@ -200,3 +200,8 @@ fi
 if [[ -x "$(command -v phpenv)" ]]; then
 	eval "$(phpenv init -)"
 fi
+
+# Load local configuration if it exists
+if [[ -f .bashrc.local ]]; then
+  source .bashrc.local
+fi

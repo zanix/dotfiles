@@ -18,7 +18,7 @@ fi
 
 # Display Fastfetch in Tmux only once
 if [[ -x "$(command -v fastfetch)" && -z "${_motd_listed}" ]]; then
-  if [[ -n "${TMUX_PANE}" && -v UNRAID ]]; then
+  if [[ -n "${TMUX_PANE}" && -v UNRAID && $UNRAID == true ]]; then
     fastfetch --logo-type auto --logo /boot/config/fast-unraid-circle-24.txt
   elif [[ -n "${TMUX_PANE}" ]]; then
     fastfetch
@@ -157,7 +157,7 @@ else
   autoload -Uz compinit && compinit
 fi
 
-[[ ! -v HAOS ]] && zinit light lukechilds/zsh-nvm
+[[ ! -v HAOS && $HAOS == true ]] && zinit light lukechilds/zsh-nvm
 zinit light zdharma-continuum/fast-syntax-highlighting
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-completions
@@ -254,4 +254,11 @@ if [[ -x "$(command -v phpenv)" ]]; then
 fi
 
 # Load Home Assistant OS CLI completion
-[[ -v HAOS ]] && source <(ha completion zsh) && compdef _ha ha
+if [[ -v HAOS && $HAOS == true ]]; then
+  source <(ha completion zsh) && compdef _ha ha
+fi
+
+# Load local configuration if it exists
+if [[ -f .zshrc.local ]]; then
+  source .zshrc.local
+fi
