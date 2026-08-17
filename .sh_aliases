@@ -592,7 +592,7 @@ function findtext() {
 	# If ripgrep is installed, use that
 	# Link: https://github.com/BurntSushi/ripgrep
 	elif [[ -x "$(command -v rg)" ]]; then
-		rg --pretty "${@}" | more
+		rg --pretty "${@}" 2>/dev/null | more
 
 	else # Use grep
 		# Link: https://www.howtogeek.com/496056/how-to-use-the-grep-command-on-linux/
