@@ -19,9 +19,8 @@ if [[ -x "$(command -v fastfetch)" && -z "${_motd_listed}" ]]; then
 	esac
 fi
 
-#######################################################
-# Environment Variables
-#######################################################
+# ╓───── Environment Variables
+# ╙────────────────────────────────────── ─ ─
 
 # fzf configuration
 export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS} \
@@ -55,9 +54,8 @@ elif [[ -x "$(command -v bat)" ]]; then
 	batname="bat"
 fi
 
-#######################################################
-# Add Common Binary Directories to Path
-#######################################################
+# ╓───── Add Directories to Path
+# ╙────────────────────────────────────── ─ ─
 
 # Add directories to the end of the path if they exist and are not already in the path
 # Link: https://superuser.com/questions/39751/add-directory-to-path-if-its-not-already-there
@@ -82,12 +80,11 @@ function pathprepend() {
 
 # Add the most common personal binary paths located inside the home folder
 # (directories are only added if they exist)
-pathprepend "${HOME}/bin" "${HOME}/sbin" "${HOME}/.local/bin" "${HOME}/local/bin" "${HOME}/.bin"
+pathprepend "${HOME}/.local/bin"
 pathappend "${HOME}/.phpenv/bin" "${HOME}/.composer/vendor/bin" "${HOME}/.config/composer/vendor/bin"
 
-#######################################################
-# History
-#######################################################
+# ╓───── History
+# ╙────────────────────────────────────── ─ ─
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -100,9 +97,8 @@ shopt -s histappend
 HISTSIZE=1000
 HISTFILESIZE=2000
 
-#######################################################
-# Prompt
-#######################################################
+# ╓───── Prompt
+# ╙────────────────────────────────────── ─ ─
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -146,9 +142,8 @@ esac
 # Add current directory to prompt for Tabby
 export PS1="${PS1}\[\e]1337;CurrentDir="'$(pwd)\a\]'
 
-#######################################################
-# Completion
-#######################################################
+# ╓───── Completion
+# ╙────────────────────────────────────── ─ ─
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -161,17 +156,15 @@ if ! shopt -oq posix; then
 	fi
 fi
 
-#######################################################
-# Aliases and Functions
-#######################################################
+# ╓───── Aliases and Functions
+# ╙────────────────────────────────────── ─ ─
 
 if [[ -f "${HOME}/.sh_aliases" ]]; then
 	. "${HOME}/.sh_aliases"
 fi
 
-#######################################################
-# Shell integrations
-#######################################################
+# ╓───── Shell integrations
+# ╙────────────────────────────────────── ─ ─
 
 # Set up fzf key bindings and fuzzy completion
 if [[ -x "$(command -v fzf)" ]]; then

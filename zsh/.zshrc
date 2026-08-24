@@ -26,9 +26,8 @@ if [[ -x "$(command -v fastfetch)" && -z "${_motd_listed}" ]]; then
   fi
 fi
 
-#######################################################
-# Zinit
-#######################################################
+# ╓───── Zinit
+# ╙────────────────────────────────────── ─ ─
 
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -42,16 +41,14 @@ fi
 # Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
-#######################################################
-# Keybinds
-#######################################################
+# ╓───── Keybinds
+# ╙────────────────────────────────────── ─ ─
 
 # Add oh-my-zsh style key bindings.
 zinit ice depth=1; zinit load "kytta/ohmyzsh-key-bindings"
 
-#######################################################
-# Environment Variables
-#######################################################
+# ╓───── Environment Variables
+# ╙────────────────────────────────────── ─ ─
 
 # Set directories
 cache_dir=${XDG_CACHE_HOME:-${HOME}/.cache}
@@ -116,9 +113,11 @@ if [[ -f "${HOME}/.config/zsh/zsh-syntax-highlighting-tokyonight.zsh" ]]; then
   source "${HOME}/.config/zsh/zsh-syntax-highlighting-tokyonight.zsh"
 fi
 
-#######################################################
-# Add Common Binary Directories to Path
-#######################################################
+# Disable paste mode highlighting
+zle_highlight=('paste:none')
+
+# ╓───── Add Directories to Path
+# ╙────────────────────────────────────── ─ ─
 
 # Add directories to the end of the path if they exist and are not already in the path
 # Link: https://superuser.com/questions/39751/add-directory-to-path-if-its-not-already-there
@@ -143,12 +142,11 @@ function pathprepend() {
 
 # Add the most common personal binary paths located inside the home folder
 # (directories are only added if they exist)
-pathprepend "${HOME}/bin" "${HOME}/sbin" "${HOME}/.local/bin" "${HOME}/local/bin" "${HOME}/.bin"
+pathprepend "${HOME}/.local/bin"
 pathappend "${HOME}/.phpenv/bin" "${HOME}/.composer/vendor/bin" "${HOME}/.config/composer/vendor/bin"
 
-#######################################################
-# Plugins
-#######################################################
+# ╓───── Plugins
+# ╙────────────────────────────────────── ─ ─
 
 # Load completions before plugins to avoid reinitializing
 if [[ -v UNRAID && $UNRAID == true ]]; then
@@ -164,9 +162,8 @@ zinit light zsh-users/zsh-completions
 zinit light sunlei/zsh-ssh
 zinit light Aloxaf/fzf-tab
 
-#######################################################
-# Snippets
-#######################################################
+# ╓───── Snippets
+# ╙────────────────────────────────────── ─ ─
 
 zinit snippet OMZP::sudo
 zinit snippet OMZP::command-not-found
@@ -184,9 +181,8 @@ if [[ ! -f ${omp_cache} || ! -f ${omp_config} || ${omp_config} -nt ${omp_cache} 
 fi
 source "${omp_cache}"
 
-#######################################################
-# Plugin Configuration
-#######################################################
+# ╓───── Plugin Configuration
+# ╙────────────────────────────────────── ─ ─
 
 # Completion styling
 # zstyle ':completion:*' use-cache true
@@ -201,9 +197,8 @@ if [[ -x "$(command -v fzf)" ]]; then
   zstyle ':completion:*:*:docker-*:*' option-stacking yes
 fi
 
-#######################################################
-# History
-#######################################################
+# ╓───── History
+# ╙────────────────────────────────────── ─ ─
 
 HISTSIZE=10000
 HISTFILE="${HOME}/.zsh_history"
@@ -217,17 +212,15 @@ setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
 
-#######################################################
-# Aliases and Functions
-#######################################################
+# ╓───── Aliases and Functions
+# ╙────────────────────────────────────── ─ ─
 
 if [[ -f "${HOME}/.sh_aliases" ]]; then
   source "${HOME}/.sh_aliases"
 fi
 
-#######################################################
-# Shell integrations
-#######################################################
+# ╓───── Shell integrations
+# ╙────────────────────────────────────── ─ ─
 
 # Set up fzf key bindings and fuzzy completion
 if [[ -x "$(command -v fzf)" ]]; then
