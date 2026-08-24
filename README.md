@@ -87,12 +87,12 @@ paru -S lazydocker-bin
 
 ### Ubuntu/Debian
 
+<details><summary>Ubuntu Installation</summary>
+
 > [!WARNING]
 > The default behavior for Zsh in Ubuntu is to initialize `compinit` for every session.
 > This causes the prompt to load very slowly unless it is disabled.
 > The `.zshenv` file with the `skip_global_compinit=1` fixes this.
-
-<details><summary>Ubuntu Installation</summary>
 
 ```shell
 sudo apt install fd-find git ifstat python3-venv stow tmux wl-clipboard zoxide zsh
@@ -289,9 +289,16 @@ cd dotfiles
 
 Run `stow` to install the dotfiles.
 
+> Current stow package options are: `bash`, `bin`, `common`, `desktop`, `ghostty`, `neovim`, `tmux`, `vim`, `zsh`
+
 ```shell
-stow .
+stow -t ~ <packages>
 ```
+
+> I currently use the packages:
+>
+> - Desktop: `stow -t ~ bin common desktop ghostty neovim tmux zsh`
+> - Servers: `stow -t ~ bin common neovim tmux zsh`
 
 <details><summary>Global Install</summary>
 
@@ -309,7 +316,7 @@ git clone https://github.com/zanix/dotfiles.git /opt/dotfiles
 Run `stow` to install the dotfiles.
 
 ```shell
-stow -d /opt/dotfiles -t /home/username .
+stow -t /home/username -d /opt/dotfiles <packages>
 ```
 
 ----
@@ -333,6 +340,14 @@ Or logout, log back in to launch zsh
 Dotfiles are now ready to use.
 
 ## Updating
+
+Change to the dotfiles directory and pull the latest changes.
+
+```shell
+cd dotfiles
+git fetch --all --prune
+git pull
+```
 
 To update the zsh plugins and snippets:
 

@@ -1,2 +1,2 @@
 .config/tmux/plugins
-bin/db.env
+desktop/.local/bin/db.env

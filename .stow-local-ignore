@@ -12,7 +12,6 @@ _darcs
 \.git
 \.gitignore
 \.gitmodules
-\.zed
 
 .+~          # emacs backup files
 \#.*\#       # emacs autosave files
@@ -22,6 +21,6 @@ _darcs
 ^/COPYING
 
 # Custom ignore configuration
-
+\.zed
+setup
 terminal.png
-my_configs.vim
