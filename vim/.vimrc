@@ -86,8 +86,15 @@ set termencoding=utf-8          " set terminal encoding to utf8
 set laststatus=2                " always show a status line in, even if there is only one window
 set cmdheight=1                 " use a status bar that is 1 rows high
 
+" fallback for HasPaste function
+if !exists('*HasPaste')
+  function! HasPaste()
+    return &paste ? '[PASTE] ' : ''
+  endfunction
+endif
+
 " format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+let &statusline = '%{HasPaste()}%f%m%r%h%w%<%=%{fnamemodify(getcwd(),":~")}  %l,%c'
 
 set ffs=unix,dos,mac            " use Unix as the standard file type
 
@@ -150,15 +157,3 @@ autocmd BufReadPost *
 \ exe "normal g'\"" |
 \ endif |
 \ endif
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Helper functions
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" Returns true if paste mode is enabled
-function! HasPaste()
-    if &paste
-        return 'PASTE MODE '
-    endif
-    return ''
-endfunction
