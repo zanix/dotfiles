@@ -233,7 +233,7 @@ Node Version Manager - POSIX-compliant bash script to manage multiple active nod
 > Node is required for Mason in Nvim, and NVM is how I install Node
 
 ```shell
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.7/install.sh | bash
 ```
 
 Install default version of node
@@ -352,13 +352,13 @@ git pull
 To update the zsh plugins and snippets:
 
 ```shell
-zinit update --all
+zsh-update
 ```
 
 To update the tmux plugins, load up tmux and enter the following:
 
 ```shell
-prefix + U
+prefix > U
 ```
 
 ## Inspiration
