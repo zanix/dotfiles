@@ -61,23 +61,23 @@ Install dependencies on your system.
 
 <details><summary>Arch Installation</summary>
 
-```shell
+```bash
 sudo pacman -Sy bat btop chafa eza fastfetch fd fzf git neovim stow tmux wl-clipboard yq zoxide zsh
 ```
 
 Install `ifstat` and `oh-my-posh` from the AUR
 
-```shell
+```bash
 paru -S ifstat oh-my-posh-bin
 ```
 
 #### Optional Arch packages
 
-```shell
+```bash
 sudo pacman -Sy lazygit
 ```
 
-```shell
+```bash
 paru -S lazydocker-bin
 ```
 
@@ -94,13 +94,13 @@ paru -S lazydocker-bin
 > This causes the prompt to load very slowly unless it is disabled.
 > The `.zshenv` file with the `skip_global_compinit=1` fixes this.
 
-```shell
+```bash
 sudo apt install fd-find git ifstat python3-venv stow tmux wl-clipboard zoxide zsh
 ```
 
 Install fzf via git
 
-```shell
+```bash
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf \
 && ~/.fzf/install --no-fish --no-update-rc
 ```
@@ -109,17 +109,17 @@ Install `oh-my-posh` using the official install script
 
 Install for all users or for the current user
 
-```shell
+```bash
 curl -s https://ohmyposh.dev/install.sh | sudo bash -s -- -d /usr/local/bin
 ```
 
-```shell
+```bash
 curl -s https://ohmyposh.dev/install.sh | bash -s
 ```
 
 Neovim needs to be installed via the appimage package
 
-```shell
+```bash
 ARCH=$(uname -m) \
 && curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${ARCH}.appimage \
 && chmod u+x nvim-linux-${ARCH}.appimage
@@ -127,37 +127,37 @@ ARCH=$(uname -m) \
 
 Install for all users or for the current user
 
-```shell
+```bash
 mv nvim-linux-${ARCH}.appimage /usr/local/bin/nvim
 ```
 
-```shell
+```bash
 mv nvim-linux-${ARCH}.appimage ~/.local/bin/nvim
 ```
 
 `yq` needs to be installed manually
 
-```shell
+```bash
 ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo arm64 || echo amd64) \
 && sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${ARCH} -O /usr/local/bin/yq && sudo chmod +x /usr/local/bin/yq
 ```
 
 #### Optional Ubuntu Packages
 
-```shell
+```bash
 sudo apt install bat btop chafa
 ```
 
 > [!NOTE]
 > `btop` needs to be installed via snap on Ubuntu 22.04 and older
 
-```shell
+```bash
 sudo snap install btop
 ```
 
 `eza` needs to be installed via ppa
 
-```shell
+```bash
 sudo mkdir -p /etc/apt/keyrings \
   && wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg \
   && echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list \
@@ -168,7 +168,7 @@ sudo mkdir -p /etc/apt/keyrings \
 
 Or manually
 
-```shell
+```bash
 ARCH=$(uname -m) \
   && `wget -c https://github.com/eza-community/eza/releases/latest/download/eza_${ARCH}-unknown-linux-gnu.tar.gz -O - | tar xz \
   && sudo chmod +x eza \
@@ -178,17 +178,17 @@ ARCH=$(uname -m) \
 
 `fastfetch` needs to be installed via ppa
 
-```shell
+```bash
 add-apt-repository -y ppa:zhangsongcui3371/fastfetch
 ```
 
-```shell
+```bash
 sudo apt install fastfetch
 ```
 
 Or Manually
 
-```shell
+```bash
 ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo aarch64 || echo amd64) \
   && wget https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-${ARCH}.deb \
   && sudo dpkg -i fastfetch-linux-${ARCH}.deb
@@ -196,7 +196,7 @@ ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo aarch64 || echo amd64) \
 
 `lazydocker` needs to be installed manually
 
-```shell
+```bash
 DIR=/usr/local/bin \
   && ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo arm64 || echo x86_64) \
   && LAZYDOCKER_VERSION=$(curl -L -s -H 'Accept: application/json' https://github.com/jesseduffield/lazydocker/releases/latest | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/') \
@@ -210,7 +210,7 @@ DIR=/usr/local/bin \
 
 `lazygit` needs to be installed manually
 
-```shell
+```bash
 ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo arm64 || echo x86_64) \
   && LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*') \
   && curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_${ARCH}.tar.gz" \
@@ -232,13 +232,13 @@ Node Version Manager - POSIX-compliant bash script to manage multiple active nod
 > [!IMPORTANT]
 > Node is required for Mason in Nvim, and NVM is how I install Node
 
-```shell
+```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.7/install.sh | bash
 ```
 
 Install default version of node
 
-```shell
+```bash
 nvm install node
 ```
 
@@ -249,7 +249,7 @@ PHP multi-version installation and management for humans
 > [!NOTE]
 > This is optional and only needed for PHP development
 
-```shell
+```bash
 git clone https://github.com/phpenv/phpenv.git ~/.phpenv
 ```
 
@@ -257,19 +257,19 @@ git clone https://github.com/phpenv/phpenv.git ~/.phpenv
 
 Add php-build
 
-```shell
+```bash
 git clone https://github.com/php-build/php-build $(phpenv root)/plugins/php-build
 ```
 
 Install required php version
 
-```shell
+```bash
 phpenv install <php-version>
 ```
 
 Rebuild php shim binaries after installing a new php version
 
-```shell
+```bash
 phpenv rehash
 ```
 
@@ -277,13 +277,13 @@ phpenv rehash
 
 Clone this repository.
 
-```shell
+```bash
 git clone https://github.com/zanix/dotfiles.git
 ```
 
 Once cloned, navigate to the desired directory.
 
-```shell
+```bash
 cd dotfiles
 ```
 
@@ -291,7 +291,7 @@ Run `stow` to install the dotfiles.
 
 > Current stow package options are: `bash`, `bin`, `common`, `desktop`, `ghostty`, `neovim`, `tmux`, `tmux-lite`, `vim`, `zsh`
 
-```shell
+```bash
 stow -t ~ <packages>
 ```
 
@@ -309,13 +309,13 @@ stow -t ~ <packages>
 
 Clone this repository.
 
-```shell
+```bash
 git clone https://github.com/zanix/dotfiles.git /opt/dotfiles
 ```
 
 Run `stow` to install the dotfiles.
 
-```shell
+```bash
 stow -t /home/username -d /opt/dotfiles <packages>
 ```
 
@@ -325,13 +325,13 @@ stow -t /home/username -d /opt/dotfiles <packages>
 
 Set the default shell to ZSH
 
-```shell
+```bash
 chsh -s $(which zsh) username
 ```
 
 Change to ZSH for the current session
 
-```shell
+```bash
 zsh
 ```
 
@@ -343,7 +343,7 @@ Dotfiles are now ready to use.
 
 Change to the dotfiles directory and pull the latest changes.
 
-```shell
+```bash
 cd dotfiles
 git fetch --all --prune
 git pull
@@ -351,13 +351,13 @@ git pull
 
 To update the zsh plugins and snippets:
 
-```shell
+```bash
 zsh-update
 ```
 
 To update the tmux plugins, load up tmux and enter the following:
 
-```shell
+```bash
 prefix > U
 ```
 
