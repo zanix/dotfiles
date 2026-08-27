@@ -62,19 +62,37 @@ Install dependencies on your system.
 <details><summary>Arch Installation</summary>
 
 ```bash
-sudo pacman -Sy bat btop chafa eza fastfetch fd fzf git neovim stow tmux wl-clipboard yq zoxide zsh
+sudo pacman -Sy \
+  bat \
+  eza \
+  fastfetch \
+  fd \
+  fzf \
+  git \
+  neovim \
+  stow \
+  tmux \
+  wl-clipboard \
+  yq \
+  zoxide \
+  zsh
 ```
 
 Install `ifstat` and `oh-my-posh` from the AUR
 
 ```bash
-paru -S ifstat oh-my-posh-bin
+paru -S \
+  ifstat \
+  oh-my-posh-bin
 ```
 
-#### Optional Arch packages
+#### Optional Arch Packages
 
 ```bash
-sudo pacman -Sy lazygit
+sudo pacman -Sy \
+  lazygit \
+  btop \
+  chafa \
 ```
 
 ```bash
@@ -95,7 +113,17 @@ paru -S lazydocker-bin
 > The `.zshenv` file with the `skip_global_compinit=1` fixes this.
 
 ```bash
-sudo apt install fd-find git ifstat python3-venv stow tmux wl-clipboard zoxide zsh
+sudo apt install \
+  bat \
+  fd-find \
+  git \
+  ifstat \
+  python3-venv \
+  stow \
+  tmux \
+  wl-clipboard \
+  zoxide \
+  zsh
 ```
 
 Install fzf via git
@@ -145,7 +173,9 @@ ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo arm64 || echo amd64) \
 #### Optional Ubuntu Packages
 
 ```bash
-sudo apt install bat btop chafa
+sudo apt install \
+  btop \
+  chafa
 ```
 
 > [!NOTE]
@@ -192,6 +222,60 @@ Or Manually
 ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo aarch64 || echo amd64) \
   && wget https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-${ARCH}.deb \
   && sudo dpkg -i fastfetch-linux-${ARCH}.deb
+```
+
+`lazydocker` needs to be installed manually
+
+```bash
+DIR=/usr/local/bin \
+  && ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo arm64 || echo x86_64) \
+  && LAZYDOCKER_VERSION=$(curl -L -s -H 'Accept: application/json' https://github.com/jesseduffield/lazydocker/releases/latest | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/') \
+  && LAZYDOCKER_FILE="lazydocker_${LAZYDOCKER_VERSION//v/}_$(uname -s)_${ARCH}.tar.gz" \
+  && LAZYDOCKER_URL="https://github.com/jesseduffield/lazydocker/releases/download/${LAZYDOCKER_VERSION}/${LAZYDOCKER_FILE}" \
+  && curl -L -o lazydocker.tar.gz $LAZYDOCKER_URL \
+  && tar xzvf lazydocker.tar.gz lazydocker \
+  && sudo install -Dm 755 lazydocker -t "$DIR" \
+  && rm lazydocker lazydocker.tar.gz
+```
+
+`lazygit` needs to be installed manually
+
+```bash
+ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo arm64 || echo x86_64) \
+  && LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*') \
+  && curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_${ARCH}.tar.gz" \
+  && tar xf lazygit.tar.gz lazygit \
+  && sudo install lazygit -D -t /usr/local/bin/ \
+  &&rm lazygit lazygit.tar.gz
+```
+
+----
+
+</details>
+
+### Fedora
+
+<details><summary>Fedora Installation</summary>
+
+```bash
+sudo dnf install \
+  bat \
+  btop \
+  chafa \
+  eza \
+  fastfetch \
+  fd-find \
+  fzf \
+  git \
+  ifstat \
+  neovim \
+  oh-my-posh \
+  stow \
+  tmux \
+  wl-clipboard \
+  yq \
+  zoxide \
+  zsh
 ```
 
 `lazydocker` needs to be installed manually
@@ -275,10 +359,18 @@ phpenv rehash
 
 ## Installation
 
+> The steps below assume you are cloning it into `~/.local/src/dotfiles` because I like to clone my dotfiles there, but you can clone it anywhere.
+
+Create skeleton directories for stow to use and to prevent symlinks being created.
+
+```bash
+mkdir -p ~/.{config,local/{bin,src}}
+```
+
 Clone this repository.
 
 ```bash
-git clone https://github.com/zanix/dotfiles.git
+git clone https://github.com/zanix/dotfiles.git ~/.local/src/dotfiles
 ```
 
 Once cloned, navigate to the desired directory.
