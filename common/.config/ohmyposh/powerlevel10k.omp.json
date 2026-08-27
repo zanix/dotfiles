@@ -11,7 +11,10 @@
           "style": "diamond",
           "trailing_diamond": "",
           "template": "{{ if .WSL }}WSL at {{ end }}{{ .Icon }} ",
-          "type": "os"
+          "type": "os",
+          "options": {
+            "cachyos": "\uf385"
+          }
         },
         {
           "background": "transparent",
