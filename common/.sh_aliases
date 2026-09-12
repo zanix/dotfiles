@@ -35,8 +35,10 @@ elif [[ -x "$(command -v nano)" ]]; then
   export EDITOR=nano
 fi
 
-# Check for VSCode and set VISUAL
-if [[ -x "$(command -v code)" ]]; then
+# Check for Zed or VSCode to set VISUAL
+if [[ -x "$(command -v zed)" ]]; then
+  export VISUAL=zed
+elif [[ -x "$(command -v code)" ]]; then
   export VISUAL=code
 else
   export VISUAL=${EDITOR}
@@ -272,22 +274,23 @@ alias ..5='..4; ..'
 # ╓───── Find Files or File Information
 # ╙────────────────────────────────────── ─ ─
 
-# Searches for filenames (can use wildcards)
+# Searches for filenames/directories (can use wildcards)
+# Use fdfind/fd if installed
+# Link: https://github.com/sharkdp/fd
 if [[ -x "$(command -v fdfind)" ]]; then
-	# Use fdfind if installed
-	# Link: https://github.com/sharkdp/fd
 	alias f='fdfind'
+	alias finddir='fd --type d'
+
+# Use the shorter fd if available
 elif [[ -x "$(command -v fd)" ]]; then
-	# Use the shorter fd command
 	alias f='fd'
+	alias finddir='fd --type d'
+
+# Fallback to standard find
 else
 	alias f='find . -type f -iname'
+	alias finddir='find . -type d -iname'
 fi
-
-# Searches for directories (can use wildcards)
-# Example: finddir config
-# Example: finddir "This has spaces"
-alias finddir='find . -type d -iname'
 
 # Show all logs in /var/log
 alias logs="find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
@@ -567,18 +570,13 @@ function csvview() {
 
 # Searches for text in all files in the current folder
 function findtext() {
-	# If The Silver Searcher is installed, use that
-	# Link: https://github.com/ggreer/the_silver_searcher
-	# Hint: You can use --ignore "dir/or/file"
-	if [[ -x "$(command -v ag)" ]]; then
-		ag --color --ignore-case --hidden --literal "${@}" 2> /dev/null
-
-	# If ripgrep is installed, use that
+	# If ripgrep is installed, use it
 	# Link: https://github.com/BurntSushi/ripgrep
-	elif [[ -x "$(command -v rg)" ]]; then
+	if [[ -x "$(command -v rg)" ]]; then
 		rg --pretty "${@}" 2>/dev/null | more
 
-	else # Use grep
+	# Use grep
+	else
 		# Link: https://www.howtogeek.com/496056/how-to-use-the-grep-command-on-linux/
 		# Hint: You can use --exclude='/dir/or/file'
 		# -i case-insensitive
