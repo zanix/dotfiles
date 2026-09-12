@@ -1,0 +1,132 @@
+#!/bin/bash
+# usage:
+# curl -L https://raw.githubusercontent.com/zanix/dotfiles/main/setup > x && chmod +x x && sudo ./x
+#
+
+# user vars
+export ME='zanix'
+export HOSTNAME='hostname'
+# script vars
+MYHOME="/home/$ME"
+ASME="sudo -u $ME"
+STOW_PKG=(bin common desktop ghostty neovim tmux zsh)
+
+# helper functions
+function _echo() { printf "\n╓───── %s \n╙────────────────────────────────────── ─ ─ \n" "$1"; }
+
+[ "$(id -u)" -ne 0 ] && {
+	_echo "Got root?" >&2
+	exit 1
+}
+
+# Global
+if [ -f /etc/debian_version ]; then
+  installcommand='apt-get --yes install'
+  system='debian/ubuntu'
+  _echo "Updating package manager..."
+  apt-get update
+elif [ -d /etc/yum.repos.d ]; then
+  installcommand='dnf install -y'
+  system='redhat/fedora'
+  _echo "Updating package manager..."
+  dnf makecache
+elif [ -d /etc/pacman.d ]; then
+  installcommand='pacman -S --noconfirm'
+  system='arch/manjaro'
+  _echo "Updating package manager..."
+  pacman -Sy
+else
+  _echo 'Error: System type not recognized. Aborting.'
+  exit 1
+fi
+
+# Installing system packages
+_echo "installing runtime deps"
+if [ "$system" == "debian/ubuntu" ]; then
+  $installcommand bat btop chafa fd-find git ifstat python3-venv stow tmux wl-clipboard zoxide zsh
+
+# elif [ "$system" == "redhat/fedora" ]; then
+elif [ "$system" == "arch/manjaro" ]; then
+  $installcommand bat btop chafa eza fastfetch fd fzf git neovim stow tmux wl-clipboard yq zoxide zsh
+  paru -S ifstat oh-my-posh-bin lazydocker-bin
+  $installcommand lazygit
+
+fi
+
+# I do not want these dirs to be symlinks
+_echo "creating directory skeletons"
+$ASME mkdir -p \
+	$MYHOME/.{config,local} \
+	$MYHOME/.local/{bin,src}
+
+# Ubuntu specific installs
+if [ "$system" == "debian/ubuntu" ]; then
+  # Install oh-my-posh
+  _echo "installing oh-my-posh"
+  curl -s https://ohmyposh.dev/install.sh | $ASME bash -s
+  # curl -s https://ohmyposh.dev/install.sh | bash -s -- -d /usr/local/bin
+
+  _echo "installing neovim"
+  ARCH=$(uname -m) \
+    && curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-"${ARCH}".appimage \
+    && chmod u+x nvim-linux-"${ARCH}".appimage &&
+    mv nvim-linux-"${ARCH}".appimage /usr/local/bin/nvim
+
+  _echo "installing fzf"
+  $ASME git clone --depth 1 https://github.com/junegunn/fzf.git $MYHOME/.fzf \
+    && $ASME $MYHOME/.fzf/install --no-fish --no-update-rc
+
+  git clone --depth 1 https://github.com/junegunn/fzf.git /root/.fzf \
+    && /root/.fzf/install --no-fish --no-update-rc
+
+  _echo "installing yq"
+  ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo arm64 || echo amd64) \
+    && wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_"${ARCH}" -O /usr/local/bin/yq \
+    && chmod +x /usr/local/bin/yq
+
+  _echo "installing eza"
+  ARCH=$(uname -m) \
+    && wget -c https://github.com/eza-community/eza/releases/latest/download/eza_"${ARCH}"-unknown-linux-gnu.tar.gz -O - | tar xz \
+    && chmod +x eza \
+    && chown root:root eza \
+    && mv eza /usr/local/bin/eza
+
+  _echo "installing fastfetch"
+  ARCH=$([[ $(uname -m) =~ ^(aarch64|arm64)$ ]] && echo aarch64 || echo amd64) \
+    && wget https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-"${ARCH}".deb \
+    && dpkg -i fastfetch-linux-"${ARCH}".deb
+fi
+
+_echo "installing nvm"
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.7/install.sh | $ASME bash
+$ASME nvm install node
+
+_echo "setting up dotfiles"
+# Rename files if in STOW_PKG, otherwise stow will fail to symlink the files
+if [[ " ${STOW_PKG[*]} " == *" bash "* ]]; then
+  for file in *.bash*; do [ -f "$file" ] && mv "$file" "$file.bak"; done
+fi
+if [[ " ${STOW_PKG[*]} " == *" zsh "* ]]; then
+  for file in *.zsh*; do [ -f "$file" ] && mv "$file" "$file.bak"; done
+fi
+if [[ " ${STOW_PKG[*]} " == *" tmux "* ]]; then
+  for file in *.tmux*; do [ -f "$file" ] && mv "$file" "$file.bak"; done
+fi
+
+$ASME git clone git@github.com:zanix/dotfiles.git $MYHOME/.local/src/dotfiles &&
+	cd $MYHOME/.local/src/dotfiles &&
+	$ASME stow "${STOW_PKG[*]}" -t $MYHOME
+
+# tmux
+$ASME mkdir $MYHOME/.config/tmux/plugins &&
+	$ASME git clone --depth=1 https://github.com/tmux-plugins/tpm $MYHOME/.config/tmux/plugins/tpm &&
+	$ASME $MYHOME/.config/tmux/plugins/tpm/scripts/install_plugins.sh 1> /dev/null
+
+# nvim
+if [[ -x "$(command -v nvim)" ]]; then
+  $ASME nvim --headless "+Lazy! sync" +qa
+  $ASME nvim --headless "+MasonInstallAll" +qa
+fi
+
+_echo "final user setup stuff"
+chown -R $ME:$ME /home/$ME
