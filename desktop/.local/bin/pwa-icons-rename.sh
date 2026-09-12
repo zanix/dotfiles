@@ -24,11 +24,26 @@ ORANGE=$(tput setaf 208)
 BOLD=$(tput bold)
 NC=$(tput sgr0) # No or reset color
 
-echo "${CYAN}${BOLD}== PWA ICONS RENAME UTILITY ==${NC}"
+echo
+echo "╓───── ${CYAN}${BOLD}PWA ICONS RENAME UTILITY${NC}"
+echo "╙────────────────────────────────────── ─ ─"
+
 echo "This script will scan ${YELLOW}~/.local/share/icons/${NC} and rename generic"
 echo "browser icons to ${GREEN}.bak${NC} to prevent them from hijacking PWA windows."
 
 selected_browsers=""
+
+# Print messages with colored symbols for OK, warning, and error
+# Usage: echo_ok "message", echo_warning "message", echo_error "message"
+echo_ok() {
+  echo "${GREEN}${BOLD}✓${NC} $1"
+}
+echo_warning() {
+  echo "${ORANGE}${BOLD}⚠${NC} $1"
+}
+echo_error() {
+  echo "${RED}${BOLD}✗${NC} $1"
+}
 
 add_selection() {
   case " $selected_browsers " in
@@ -74,7 +89,7 @@ selection_input=$(printf '%s' "$selection_input" | tr ',' ' ')
 
 case " $selection_input " in
   *" q "*|*" Q "*)
-    echo "${ORANGE}⚠${NC} Operation cancelled."
+    echo_warning "Operation cancelled."
     exit 0
     ;;
 esac
@@ -98,7 +113,7 @@ for selection in $selection_input; do
       break
       ;;
     *)
-      echo "${RED}✗${NC} Unknown selection: $selection"
+      echo_error "Unknown selection: $selection"
       exit 1
       ;;
   esac
@@ -133,10 +148,10 @@ kbuildsycoca6 2>/dev/null
 
 echo ""
 echo "${RED}CRITICAL STEP${NC}: Plasma Shell Restart Required."
-echo "--------------------------------------------------------------------------"
+echo "──────────────────────────────────────────────────────────────────────────"
 echo "To display the new icons, the Plasma desktop shell must be refreshed."
 echo "${ORANGE}⚠ WARNING${NC}: Your desktop, panels, and wallpaper will temporarily disappear."
-echo "--------------------------------------------------------------------------"
+echo "──────────────────────────────────────────────────────────────────────────"
 
 echo "Restart Plasma shell now? (y/n) [${YELLOW}Y${NC}]: "
 read -r confirm_plasma
@@ -144,7 +159,7 @@ read -r confirm_plasma
 if [ "$confirm_plasma" = "y" ] || [ "$confirm_plasma" = "Y" ] || [ "$confirm_plasma" = "" ]; then
   echo "Restarting plasmashell... please wait."
   plasmashell --replace >/dev/null 2>&1 & disown
-  echo "${GREEN}✔${NC} Icons modified and Plasma shell refreshed."
+  echo_ok "Icons modified and Plasma shell refreshed."
 else
-  echo "${GREEN}✔${NC} Icons modified. Changes will take effect after your next login."
+  echo_warning "Icons modified. Changes will take effect after your next login."
 fi

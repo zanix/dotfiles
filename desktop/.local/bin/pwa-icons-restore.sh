@@ -17,10 +17,25 @@ ORANGE=$(tput setaf 208)
 BOLD=$(tput bold)
 NC=$(tput sgr0) # No or reset color
 
-echo "${CYAN}${BOLD}== PWA ICONS RESTORE UTILITY ==${NC}"
-echo "This script will restore the original browser icons."
+echo
+echo "╓───── ${CYAN}${BOLD}PWA ICONS RESTORE UTILITY${NC}"
+echo "╙────────────────────────────────────── ─ ─"
+
+echo "This script will restore the original browser icons renamed with ${YELLOW}*.bak${NC}."
 
 selected_browsers=""
+
+# Print messages with colored symbols for OK, warning, and error
+# Usage: echo_ok "message", echo_warning "message", echo_error "message"
+echo_ok() {
+  echo "${GREEN}${BOLD}✓${NC} $1"
+}
+echo_warning() {
+  echo "${ORANGE}${BOLD}⚠${NC} $1"
+}
+echo_error() {
+  echo "${RED}${BOLD}✗${NC} $1"
+}
 
 add_selection() {
   case " $selected_browsers " in
@@ -66,7 +81,7 @@ selection_input=$(printf '%s' "$selection_input" | tr ',' ' ')
 
 case " $selection_input " in
   *" q "*|*" Q "*)
-    echo "${ORANGE}⚠${NC} Operation cancelled."
+    echo_warning "Operation cancelled."
     exit 0
     ;;
 esac
@@ -90,7 +105,7 @@ for selection in $selection_input; do
       break
       ;;
     *)
-      echo "${RED}✗${NC} Unknown selection: $selection"
+      echo_error "Unknown selection: $selection"
       exit 1
       ;;
   esac
@@ -120,12 +135,20 @@ done
 
 echo "Rebuilding KDE icon database..."
 kbuildsycoca6 2>/dev/null
+
+echo ""
+echo "${RED}CRITICAL STEP${NC}: Plasma Shell Restart Required."
+echo "──────────────────────────────────────────────────────────────────────────"
+echo "To display the restored icons, the Plasma desktop shell must be refreshed."
+echo "${ORANGE}⚠ WARNING${NC}: Your desktop, panels, and wallpaper will temporarily disappear."
+echo "──────────────────────────────────────────────────────────────────────────"
+
 echo "Restart Plasma shell now? (y/n) [${YELLOW}Y${NC}]: "
 read -r confirm_plasma
 
 if [ "$confirm_plasma" = "y" ] || [ "$confirm_plasma" = "Y" ] || [ "$confirm_plasma" = "" ]; then
   plasmashell --replace >/dev/null 2>&1 & disown
-  echo "${GREEN}✔${NC} Original icons restored and Plasma refreshed."
+  echo_ok "Original icons restored and Plasma refreshed."
 else
-  echo "${GREEN}✔${NC} Original icons restored. Changes will apply after next login."
+  echo_warning "Original icons restored. Changes will apply after next login."
 fi
