@@ -381,7 +381,7 @@ cd dotfiles
 
 Run `stow` to install the dotfiles.
 
-> Current stow package options are: `bash`, `bin`, `common`, `desktop`, `ghostty`, `neovim`, `tmux`, `tmux-lite`, `vim`, `zsh`
+> Current stow package options are: `bash`, `bin`, `common`, `desktop`, `ghostty`, `konsole`, `neovim`, `tmux`, `tmux-lite`, `vim`, `zsh`
 
 ```bash
 stow -t ~ <packages>
