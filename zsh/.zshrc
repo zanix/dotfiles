@@ -174,7 +174,7 @@ zinit cdreplay -q
 
 # Cache oh-my-posh init to avoid recomputation
 omp_cache=${cache_dir}/oh-my-posh-init.zsh
-omp_config=${config_dir}/ohmyposh/powerlevel10k.omp.json
+omp_config=${config_dir}/ohmyposh/negligible.omp.json
 if [[ ! -f ${omp_cache} || ! -f ${omp_config} || ${omp_config} -nt ${omp_cache} || $(command -v oh-my-posh) -nt ${omp_cache} ]]; then
   mkdir -p "${cache_dir}"
   oh-my-posh init zsh --config "${omp_config}" > "${omp_cache}"
