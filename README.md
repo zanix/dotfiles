@@ -64,11 +64,13 @@ Install dependencies on your system.
 ```bash
 sudo pacman -Sy \
   bat \
+  bc \
   eza \
   fastfetch \
   fd \
   fzf \
   git \
+  jq \
   neovim \
   stow \
   tmux \
