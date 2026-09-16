@@ -1,7 +1,7 @@
 [Appearance]
 BorderWhenActive=false
 ColorScheme=TokyoNight
-Font=JetBrainsMono NFM,11,-1,5,500,0,0,0,0,0,0,0,0,0,0,1,Regular,0,0
+Font=JetBrainsMono Nerd Font,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0
 TabColor=44,44,44,0
 UseFontLineChararacters=true
 
