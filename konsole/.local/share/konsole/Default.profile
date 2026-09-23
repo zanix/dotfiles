@@ -2,6 +2,7 @@
 BorderWhenActive=false
 ColorScheme=TokyoNight
 Font=JetBrainsMono Nerd Font,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1,,0,0
+FontHinting=true
 TabColor=44,44,44,0
 UseFontLineChararacters=true
 
@@ -26,4 +27,5 @@ HistorySize=10000
 
 [Terminal Features]
 AnimatingCursorEnabled=true
+BidiRenderingEnabled=false
 BlinkingCursorEnabled=true
