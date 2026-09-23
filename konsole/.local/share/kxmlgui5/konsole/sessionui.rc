@@ -89,5 +89,6 @@
   <Action name="monitor-activity" priority="0"/>
   <Action name="edit_find" priority="0"/>
   <Action name="monitor-process-finish" priority="0"/>
+  <Action name="next-profile" shortcut=""/>
  </ActionProperties>
 </gui>
