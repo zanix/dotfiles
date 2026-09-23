@@ -14,12 +14,6 @@
           }
         },
         {
-          "type": "root",
-          "foreground": "#F1502F",
-          "style": "plain",
-          "template": "\udb85\udc0b "
-        },
-        {
           "type": "path",
           "foreground": "cyan",
           "options": {
@@ -156,6 +150,12 @@
           "foreground": "darkGray",
           "style": "plain",
           "template": "\u2570\u2500"
+        },
+        {
+          "type": "text",
+          "foreground": "lightBlue",
+          "style": "plain",
+          "template": "{{ if .Root }}<#F1502F>\uf292</>{{ else }}\uf155{{ end }}"
         }
       ],
       "type": "prompt"
